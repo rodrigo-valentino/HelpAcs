@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart'; 
-import '../core/enums/health_status.dart'; // 🆕 Import do Enum Global
+
+import '../theme/app_colors.dart';
+import '../enums/health_status.dart';
 
 class HealthStatusBadge extends StatelessWidget {
-  final HealthStatus status; // 🆕 Agora recebe o HealthStatus global
+  final HealthStatus status;
   final double fontSize;
 
   const HealthStatusBadge({
@@ -14,57 +15,74 @@ class HealthStatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color textColor;
-    Color bgColor;
-    String label;
-    IconData icon;
+    late final Color textColor;
+    late final Color backgroundColor;
+    late final Color borderColor;
+    late final String label;
+    late final IconData icon;
 
-    // A mágica centralizada!
     switch (status) {
-      case ChildHealthStatus.upToDate:
-        textColor = AppColors.success; // Verde
-        bgColor = AppColors.success.withAlpha(25);
+      case HealthStatus.upToDate:
+        textColor = AppColors.success;
+        backgroundColor = AppColors.successSurface;
+        borderColor = AppColors.successBorder;
         label = 'Em Dia';
         icon = Icons.check_circle_outline;
         break;
-      case ChildHealthStatus.warning:
-        textColor = AppColors.warning; // Laranja/Amarelo
-        bgColor = AppColors.warning.withAlpha(25);
+
+      case HealthStatus.warning:
+        textColor = AppColors.warning;
+        backgroundColor = AppColors.warningSurface;
+        borderColor = AppColors.warningBorder;
         label = 'Atenção';
         icon = Icons.access_time;
         break;
-      case ChildHealthStatus.overdue:
-        textColor = AppColors.error; // Vermelho
-        bgColor = AppColors.error.withAlpha(25);
+
+      case HealthStatus.overdue:
+        textColor = AppColors.error;
+        backgroundColor = AppColors.errorSurface;
+        borderColor = AppColors.errorBorder;
         label = 'Atrasado';
         icon = Icons.error_outline;
         break;
-      case ChildHealthStatus.pending:
-      default:
-        textColor = Colors.grey.shade700;
-        bgColor = Colors.grey.shade200;
+
+      case HealthStatus.pending:
+        textColor = AppColors.textSecondary;
+        backgroundColor = AppColors.surface;
+        borderColor = AppColors.border;
         label = 'Pendente';
         icon = Icons.help_outline;
         break;
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 6,
+      ),
       decoration: BoxDecoration(
-        color: bgColor,
+        color: backgroundColor,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: textColor.withAlpha(50)),
+        border: Border.all(
+          color: borderColor,
+        ),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min, // Ocupa apenas o tamanho necessário
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: fontSize + 4, color: textColor),
-          const SizedBox(width: 4),
+          Icon(
+            icon,
+            size: fontSize + 4,
+            color: textColor,
+          ),
+
+          const SizedBox(width: 6),
+
           Text(
             label,
             style: TextStyle(
               color: textColor,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w700,
               fontSize: fontSize,
             ),
           ),

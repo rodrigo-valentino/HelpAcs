@@ -10,7 +10,7 @@ import '../dialogs/child_form_dialog.dart';
 import '../models/child_model.dart';
 import 'vaccination_page.dart';
 import '../../imports/import_button.dart';
-
+import '../../services/health_status_badge.dart';
 
 class ChildListPage extends ConsumerStatefulWidget {
   const ChildListPage({super.key});
@@ -152,9 +152,13 @@ class _ChildListPageState extends ConsumerState<ChildListPage> {
       padding: const EdgeInsets.all(16.0),
       child: TextField(
         controller: _searchController,
+        onChanged: (value) {
+          setState(() => _query = value);
+        },
         decoration: AppInputDecoration.outlined(
           hint: 'Buscar por nome ou responsável...',
-          prefixIcon: const Icon(Icons.search),
+          prefixIcon: Icons.search,
+        ).copyWith(
           suffixIcon: _query.isNotEmpty
               ? IconButton(
                   icon: const Icon(Icons.clear, size: 20),
@@ -164,12 +168,6 @@ class _ChildListPageState extends ConsumerState<ChildListPage> {
                   },
                 )
               : null,
-          filled: true,
-          fillColor: Colors.white,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
-          ),
         ),
       ),
     );
@@ -191,7 +189,6 @@ class _ChildListPageState extends ConsumerState<ChildListPage> {
       getStatusWeight: (child) => child.status.index, // Adaptado para o seu Enum do Hive
     );
 
-    // ✅ NOVO: Contador total de pacientes
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -283,7 +280,7 @@ class _ChildListPageState extends ConsumerState<ChildListPage> {
             children: [
               CircleAvatar(
                 radius: 24,
-                backgroundColor: isSelected ? AppColors.primary : AppColors.tealSurface,
+                backgroundColor: isSelected ? AppColors.primary : AppColors.primary.withAlpha(30),
                 child: isSelected
                     ? const Icon(Icons.check, color: Colors.white)
                     : Text(
@@ -310,7 +307,10 @@ class _ChildListPageState extends ConsumerState<ChildListPage> {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        _buildStatusBadge(child),
+                        HealthStatusBadge(
+                          status: child.status, 
+                          fontSize: 10, 
+                        ),
                       ],
                     ),
                     const SizedBox(height: 4),
@@ -324,51 +324,6 @@ class _ChildListPageState extends ConsumerState<ChildListPage> {
               const Icon(Icons.chevron_right, color: Colors.grey),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStatusBadge(ChildModel child) {
-    final Color bgColor;
-    final Color textColor;
-    final String label;
-
-    switch (child.status) {
-      case ChildHealthStatus.overdue:
-        bgColor = AppColors.error.withAlpha(30);
-        textColor = AppColors.error;
-        label = "ATRASADA";
-        break;
-      case ChildHealthStatus.warning:
-        bgColor = Colors.orange.withAlpha(30);
-        textColor = Colors.orange.shade900;
-        label = "ATENÇÃO";
-        break;
-      case ChildHealthStatus.upToDate:
-        bgColor = AppColors.success.withAlpha(30);
-        textColor = AppColors.success;
-        label = "EM DIA";
-        break;
-      case ChildHealthStatus.pending:
-        bgColor = Colors.grey.withAlpha(30);
-        textColor = Colors.grey.shade700;
-        label = "PENDENTE";
-    }
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: textColor,
-          fontSize: 10,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 0.5,
         ),
       ),
     );

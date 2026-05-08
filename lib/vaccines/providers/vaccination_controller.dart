@@ -3,6 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../models/child_model.dart';
 import '../models/vaccine_record_model.dart';
 import '../../services/health_status_service.dart';
+import '../../utils/hive_keys.dart';
 
 final vaccinationControllerProvider = AsyncNotifierProvider.family<VaccinationController, ChildModel, int>(() {
   return VaccinationController();

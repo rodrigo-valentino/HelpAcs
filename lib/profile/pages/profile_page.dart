@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../utils/feedback_helper.dart';
 import '../controllers/profile_controller.dart';
 import '../../theme/app_colors.dart';
+import '../../theme/app_input_decoration.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
@@ -19,7 +20,7 @@ class ProfilePage extends ConsumerWidget {
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text("Perfil")),
+        title: const Text("Perfil"),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -285,12 +286,12 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
           children: [
             TextField(
               controller: _nameCtrl,
-              decoration: const AppInputDecoration.outlined(labelText: "Nome", prefixIcon: Icons.person),
+              decoration: AppInputDecoration.outlined(label: "Nome", prefixIcon: Icons.person),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: _emailCtrl,
-              decoration: const AppInputDecoration.outlined(labelText: "E-mail", prefixIcon: Icons.email),
+              decoration: AppInputDecoration.outlined(label: "E-mail", prefixIcon: Icons.email),
             ),
           ],
         ),

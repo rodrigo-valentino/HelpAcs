@@ -1,5 +1,6 @@
 import '../vaccines/models/child_model.dart';
 import '../vaccines/models/vaccine_record_model.dart';
+import '../enums/health_status.dart';
 
 class VaccineRule {
   final String group;
@@ -79,7 +80,7 @@ class HealthStatusService {
   }
 
   /// RF10: Calcula o status geral da criança
-  static ChildHealthStatus calculateOverallStatus({
+  static HealthStatus calculateOverallStatus({
     required ChildModel child,
     required List<VaccineRecord> patientRecords, // As vacinas que já estão no banco para esta criança
   }) {
@@ -109,7 +110,7 @@ class HealthStatusService {
       // REGRA: Atrasado (Existe vacina vencida sem aplicação)
       if (differenceInDays < 0) {
         // Encontrou UMA atrasada? O status geral já vira "Overdue" imediatamente (Prioridade Máxima)
-        return ChildHealthStatus.overdue; 
+        return HealthStatus.overdue; 
       }
 
       // REGRA: Atenção (Existe vacina próxima do vencimento, <= 3 dias)
@@ -120,10 +121,10 @@ class HealthStatusService {
 
     // Se varreu tudo e achou aviso de 3 dias...
     if (hasWarning) {
-      return ChildHealthStatus.warning;
+      return HealthStatus.warning;
     }
 
     // Se não tem atrasadas nem avisos próximos, está EM DIA (RF10)
-    return ChildHealthStatus.upToDate;
+    return HealthStatus.upToDate;
   }
 }

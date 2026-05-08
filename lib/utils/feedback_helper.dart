@@ -113,9 +113,9 @@ class FeedbackHelper {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: AppColors.warningSurface,
+                  color: AppColors.warning.withAlpha(30),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: AppColors.warningBorder),
+                  border: Border.all(color: AppColors.warning),
                 ),
                 child: Row(
                   children: [

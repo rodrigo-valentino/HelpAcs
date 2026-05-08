@@ -7,6 +7,7 @@ import '../../services/health_status_service.dart';
 import '../../utils/date_formatter.dart';
 import '../../widgets/document_gallery_widget.dart'; 
 import '../dialogs/custom_vaccine_dialog.dart';
+import '../../theme/app_colors.dart';
 
 class VaccinationPage extends ConsumerStatefulWidget {
   final ChildModel child;

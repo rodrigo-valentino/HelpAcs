@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/child_model.dart';
 import '../providers/child_list_controller.dart';
 import '../../theme/app_colors.dart';
+import '../../theme/app_input_decoration.dart';
 import '../../utils/date_formatter.dart';
 import '../../utils/cupertino_date_picker.dart';
 import '../../utils/feedback_helper.dart';
@@ -207,9 +208,9 @@ class _ChildFormDialogState extends ConsumerState<ChildFormDialog> {
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: AppColors.warningSurface,
+                      color: AppColors.warning.withAlpha(30),
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: AppColors.warningBorder),
+                      border: Border.all(color: AppColors.warning),
                     ),
                     child: Row(
                       children: [

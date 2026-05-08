@@ -1,7 +1,8 @@
 import 'package:hive/hive.dart';
 
 import 'vaccine_record_model.dart';
-import '../utils/date_formatter.dart';
+import '/utils/date_formatter.dart';
+import '../../enums/health_status.dart';
 
 part 'child_model.g.dart';
 

@@ -8,7 +8,7 @@ import './vaccines/models/child_model.dart';
 import './vaccines/models/vaccine_record_model.dart'; // 🆕 Importação da Vacina
 import './profile/models/profile_model.dart';
 import './theme/app_colors.dart';
-
+import './enums/health_status.dart';
 void main() async {
   // 1. Garante que a ponte entre o Flutter e o código nativo está inicializada
   WidgetsFlutterBinding.ensureInitialized();
