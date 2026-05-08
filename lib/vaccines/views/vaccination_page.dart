@@ -23,7 +23,7 @@ class _VaccinationPageState extends ConsumerState<VaccinationPage> {
 
   @override
   Widget build(BuildContext context) {
-    final asyncChild = ref.watch(vaccinationControllerProvider(widget.child.key));
+    final asyncChild = ref.watch(vaccinationControllerProvider(widget.child.key as int));
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
@@ -66,7 +66,7 @@ class _VaccinationPageState extends ConsumerState<VaccinationPage> {
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
-                  color: _currentTabIndex == 0 ? Colors.blue : Colors.white,
+                  color: _currentTabIndex == 0 ? AppColors.primary : Colors.white,
                   border: _currentTabIndex == 0 ? null : Border.all(color: Colors.grey.shade300),
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -74,7 +74,7 @@ class _VaccinationPageState extends ConsumerState<VaccinationPage> {
                 child: Text(
                   'Cronograma de Vacinas', 
                   style: TextStyle(
-                    color: _currentTabIndex == 0 ? Colors.white : Colors.blue, 
+                    color: _currentTabIndex == 0 ? Colors.white : AppColors.primary, 
                     fontWeight: FontWeight.bold
                   ),
                 ),
@@ -88,7 +88,7 @@ class _VaccinationPageState extends ConsumerState<VaccinationPage> {
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
-                  color: _currentTabIndex == 1 ? Colors.blue : Colors.white,
+                  color: _currentTabIndex == 1 ? AppColors.primary : Colors.white,
                   border: _currentTabIndex == 1 ? null : Border.all(color: Colors.grey.shade300),
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -96,7 +96,7 @@ class _VaccinationPageState extends ConsumerState<VaccinationPage> {
                 child: Text(
                   'Caderneta de Vacinação', 
                   style: TextStyle(
-                    color: _currentTabIndex == 1 ? Colors.white : Colors.blue,
+                    color: _currentTabIndex == 1 ? Colors.white : AppColors.primary,
                     fontWeight: FontWeight.bold
                   ),
                 ),
@@ -273,7 +273,7 @@ class _VaccinationPageState extends ConsumerState<VaccinationPage> {
                       showDialog(
                         context: context,
                         builder: (context) => CustomVaccineDialog(
-                          childKey: currentChild.key, // Passamos a chave do Hive do paciente atual
+                          childKey: currentChild.key as int, // Passamos a chave do Hive do paciente atual
                           groupName: groupName,       // Passamos o grupo (ex: "2 meses")
                         ),
                       );
@@ -355,7 +355,7 @@ class _VaccineCardWidget extends ConsumerWidget {
         leading: InkWell(
           onTap: isFuture && !isApplied ? null : () {
             // Chama o método para alterar o status da vacina
-            ref.read(vaccinationControllerProvider(childKey).notifier).toggleVaccine(
+            ref.read(vaccinationControllerProvider(childKey as int).notifier).toggleVaccine(
               groupName: groupName,
               vaccineName: ruleName,
               doseNumber: doseNumber,
@@ -365,7 +365,7 @@ class _VaccineCardWidget extends ConsumerWidget {
             width: 28,
             height: 28,
             decoration: BoxDecoration(
-              color: isApplied ? Colors.blue : (isFuture ? Colors.grey.shade300 : Colors.grey.shade700),
+              color: isApplied ? AppColors.primary : (isFuture ? Colors.grey.shade300 : Colors.grey.shade700),
               borderRadius: BorderRadius.circular(4),
             ),
             child: isApplied ? const Icon(Icons.check, color: Colors.white, size: 20) : null,

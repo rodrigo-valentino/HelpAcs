@@ -116,7 +116,7 @@ class HomePage extends ConsumerWidget {
                     title: "Acompanhamento Vacinal",
                     subtitle: "Crianças e adultos",
                     icon: Icons.child_care_rounded,
-                    color: Colors.blue,
+                    color: AppColors.primary,
                     onTap: () {
                       Navigator.push(
                         context,

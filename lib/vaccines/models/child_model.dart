@@ -5,21 +5,6 @@ import '../utils/date_formatter.dart';
 
 part 'child_model.g.dart';
 
-@HiveType(typeId: 0)
-enum ChildHealthStatus {
-  @HiveField(0)
-  overdue,
-
-  @HiveField(1)
-  warning,
-
-  @HiveField(2)
-  upToDate,
-
-  @HiveField(3)
-  pending,
-}
-
 @HiveType(typeId: 1)
 class ChildModel extends HiveObject {
 
@@ -39,7 +24,7 @@ class ChildModel extends HiveObject {
   String? notes;
 
   @HiveField(5)
-  ChildHealthStatus status;
+  HealthStatus status;
 
   @HiveField(6)
   List<String> imagePaths;
@@ -53,7 +38,7 @@ class ChildModel extends HiveObject {
     this.guardianName,
     this.cpf,
     this.notes,
-    this.status = ChildHealthStatus.pending,
+    this.status = HealthStatus.pending,
     List<String>? imagePaths,
     List<VaccineRecord>? vaccines,
   })  : imagePaths = imagePaths ?? [],

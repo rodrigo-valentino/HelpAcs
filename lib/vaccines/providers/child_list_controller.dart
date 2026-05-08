@@ -10,7 +10,7 @@ final childListControllerProvider = AsyncNotifierProvider<ChildListController, L
 class ChildListController extends AsyncNotifier<List<ChildModel>> {
   @override
   Future<List<ChildModel>> build() async {
-    final box = await Hive.openBox<ChildModel>('childrenBox');
+    final box = await Hive.openBox<ChildModel>(HiveKeys.childrenBox);
     final children = box.values.toList();
 
     bool needsSave = false;
@@ -35,7 +35,7 @@ class ChildListController extends AsyncNotifier<List<ChildModel>> {
 
   // Método para adicionar um paciente
   Future<void> addChild(ChildModel child) async {
-    final box = Hive.box<ChildModel>('childrenBox');
+    final box = Hive.box<ChildModel>(HiveKeys.childrenBox);
     await box.add(child); // O Hive gera o ID (key) automaticamente
     
     // Atualiza a tela instantaneamente com a nova lista
@@ -44,7 +44,7 @@ class ChildListController extends AsyncNotifier<List<ChildModel>> {
 
   // Método para deletar pacientes selecionados
   Future<void> deleteChildren(List<dynamic> keys) async {
-    final box = Hive.box<ChildModel>('childrenBox');
+    final box = Hive.box<ChildModel>(HiveKeys.childrenBox);
     await box.deleteAll(keys); 
     
     // Atualiza a tela após a exclusão
@@ -59,7 +59,7 @@ class ChildListController extends AsyncNotifier<List<ChildModel>> {
     String? notes,
     String? cpf,
   }) async {
-    final box = Hive.box<ChildModel>('childrenBox');
+    final box = Hive.box<ChildModel>(HiveKeys.childrenBox);
     
     // Busca o paciente pela chave única do Hive
     final child = box.get(key); 

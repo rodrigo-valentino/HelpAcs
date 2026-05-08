@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../utils/feedback_helper.dart';
 import '../controllers/profile_controller.dart';
+import '../../theme/app_colors.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
@@ -12,17 +13,17 @@ class ProfilePage extends ConsumerWidget {
     final controller = ref.read(profileControllerProvider.notifier);
 
     // Cores fiéis ao design (Verde e Cinza)
-    const activeColor = Color(0xFF4CAF50); 
-    const backgroundColor = Color(0xFFF5F7FA);
+    const activeColor = AppColors.primary;
+    const backgroundColor = AppColors.background;
 
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
-        title: const Text("Perfil", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold)),
+        title: const Text("Perfil")),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: const BackButton(color: Colors.blue),
+        leading: const BackButton(color: AppColors.primary),
       ),
       body: asyncProfile.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -284,13 +285,12 @@ class _EditProfileDialogState extends State<_EditProfileDialog> {
           children: [
             TextField(
               controller: _nameCtrl,
-              decoration: const InputDecoration(labelText: "Nome", border: OutlineInputBorder()),
+              decoration: const AppInputDecoration.outlined(labelText: "Nome", prefixIcon: Icons.person),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: _emailCtrl,
-              decoration: const InputDecoration(labelText: "E-mail", border: OutlineInputBorder()),
-              keyboardType: TextInputType.emailAddress,
+              decoration: const AppInputDecoration.outlined(labelText: "E-mail", prefixIcon: Icons.email),
             ),
           ],
         ),

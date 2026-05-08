@@ -9,42 +9,42 @@ final profileControllerProvider = AsyncNotifierProvider<ProfileController, Profi
 class ProfileController extends AsyncNotifier<ProfileModel> {
   @override
   Future<ProfileModel> build() async {
-    final box = await Hive.openBox<ProfileModel>('profileBox');
+    final box = await Hive.openBox<ProfileModel>(HiveKeys.profileBox);
     // Retorna o perfil existente ou cria um padrão se for o primeiro acesso
-    return box.get('adminProfile') ?? ProfileModel();
+    return box.get(HiveKeys.adminProfile) ?? ProfileModel();
   }
 
   // Atualiza Nome e Email (Chamado no Dialog)
   Future<void> updateUserInfo(String name, String email) async {
-    final box = Hive.box<ProfileModel>('profileBox');
-    final profile = box.get('adminProfile') ?? ProfileModel();
+    final box = Hive.box<ProfileModel>(HiveKeys.profileBox);
+    final profile = box.get(HiveKeys.adminProfile) ?? ProfileModel();
     
     profile.name = name;
     profile.email = email;
     
-    await box.put('adminProfile', profile);
+    await box.put(HiveKeys.adminProfile, profile);
     state = AsyncValue.data(profile); // Atualiza a tela
   }
 
   // Liga/Desliga Notificações (Chamado no Switch)
   Future<void> toggleNotifications(bool value) async {
-    final box = Hive.box<ProfileModel>('profileBox');
-    final profile = box.get('adminProfile') ?? ProfileModel();
+    final box = Hive.box<ProfileModel>(HiveKeys.profileBox);
+    final profile = box.get(HiveKeys.adminProfile) ?? ProfileModel();
     
     profile.notificationsEnabled = value;
     
-    await box.put('adminProfile', profile);
+    await box.put(HiveKeys.adminProfile, profile);
     state = AsyncValue.data(profile);
   }
 
   // Altera os dias de lembrete (Chamado nas bolinhas 3, 7, 14)
   Future<void> setReminderDays(int days) async {
-    final box = Hive.box<ProfileModel>('profileBox');
-    final profile = box.get('adminProfile') ?? ProfileModel();
+    final box = Hive.box<ProfileModel>(HiveKeys.profileBox);
+    final profile = box.get(HiveKeys.adminProfile) ?? ProfileModel();
     
     profile.reminderDaysBefore = days;
     
-    await box.put('adminProfile', profile);
+    await box.put(HiveKeys.adminProfile, profile);
     state = AsyncValue.data(profile);
   }
 }

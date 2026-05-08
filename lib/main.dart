@@ -7,6 +7,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import './vaccines/models/child_model.dart';
 import './vaccines/models/vaccine_record_model.dart'; // 🆕 Importação da Vacina
 import './profile/models/profile_model.dart';
+import './theme/app_colors.dart';
 
 void main() async {
   // 1. Garante que a ponte entre o Flutter e o código nativo está inicializada
@@ -16,10 +17,10 @@ void main() async {
   await Hive.initFlutter();
 
   // 3. Regista os Adapters (Gerados pelo build_runner)
-  Hive.registerAdapter(ChildHealthStatusAdapter()); // TypeId: 0
+  Hive.registerAdapter(HealthStatusAdapter());      // TypeId: 0
   Hive.registerAdapter(ChildModelAdapter());        // TypeId: 1
   Hive.registerAdapter(ProfileModelAdapter());      // TypeId: 2
-  Hive.registerAdapter(VaccineRecordAdapter());     // 🆕 TypeId: 3 (Faltava este!)
+  Hive.registerAdapter(VaccineRecordAdapter());     // TypeId: 3 
 
   // 4. Inicia a aplicação. 
   // O ProviderScope é obrigatório para que os Providers do Riverpod funcionem.
@@ -43,8 +44,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
-          surface: const Color(0xFFF5F7FA), // O fundo cinza claro
+          seedColor: AppColors.primary, // Cor principal do app
+          surface: AppColors.background, // O fundo cinza claro
         ),
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.transparent,

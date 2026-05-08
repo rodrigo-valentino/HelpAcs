@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/vaccination_controller.dart';
+import '../../providers/vaccination_controller.dart';
+import '../../widgets/base_form_dialog.dart';
+import '../../utils/app_colors.dart';
+import '../../theme/app_input_decoration.dart';
 
 class CustomVaccineDialog extends ConsumerStatefulWidget {
-  final dynamic childKey; // A chave do Hive para identificar a criança
-  final String groupName; // O grupo etário (ex: "2 meses") onde será adicionada
+  final int childKey; 
+  final String groupName;
 
   const CustomVaccineDialog({
     super.key,
@@ -17,7 +20,6 @@ class CustomVaccineDialog extends ConsumerStatefulWidget {
 }
 
 class _CustomVaccineDialogState extends ConsumerState<CustomVaccineDialog> {
-  final _formKey = GlobalKey<FormState>();
   final _nameCtrl = TextEditingController();
   final _obsCtrl = TextEditingController();
 
@@ -28,110 +30,70 @@ class _CustomVaccineDialogState extends ConsumerState<CustomVaccineDialog> {
     super.dispose();
   }
 
-  void _submit() {
-    if (_formKey.currentState!.validate()) {
-      // Chama o controller para adicionar a vacina
-      ref.read(vaccinationControllerProvider(widget.childKey).notifier).addCustomVaccine(
-        groupName: widget.groupName,
-        vaccineName: _nameCtrl.text.trim(),
-        observation: _obsCtrl.text.trim().isEmpty ? null : _obsCtrl.text.trim(),
-      );
-      
-      Navigator.of(context).pop(); // Fecha o modal
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Cabeçalho do Modal
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Adicionar Vacina Personalizada',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF2C3E50)),
-                  ),
-                  InkWell(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: const Icon(Icons.close, color: Colors.grey),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
+    return BaseFormDialog(
+      title: 'Adicionar Vacina Personalizada',
+      icon: Icons.vaccines, // Um ícone mais adequado!
+      iconColor: AppColors.primary,
+      saveButtonText: 'Adicionar',
+      saveButtonColor: AppColors.primary,
+      
+      // O BaseFormDialog gerencia a chamada dessa função ao clicar em Salvar
+      onSubmit: () async {
+        if (_nameCtrl.text.trim().isEmpty) {
+          throw Exception('O nome da vacina é obrigatório'); // O BaseFormDialog já captura isso e mostra no SnackBar!
+        }
 
-              // Campo: Nome da Vacina (Obrigatório)
-              const Text('Nome da Vacina *', style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF34495E))),
-              const SizedBox(height: 8),
+        await ref.read(vaccinationControllerProvider(widget.childKey).notifier).addCustomVaccine(
+          groupName: widget.groupName,
+          vaccineName: _nameCtrl.text.trim(),
+          observation: _obsCtrl.text.trim().isEmpty ? null : _obsCtrl.text.trim(),
+        );
+      },
+      
+      // O BaseFormDialog nos dá a formKey para colocarmos no nosso Form
+      builder: (formKey) {
+        return Form(
+          key: formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(bottom: 6, left: 4),
+                child: Text('Nome da Vacina *', style: TextStyle(fontWeight: FontWeight.w600)),
+              ),
               TextFormField(
                 controller: _nameCtrl,
                 textCapitalization: TextCapitalization.words,
-                decoration: InputDecoration(
-                  hintText: 'Ex: Influenza, COVID-19',
-                  hintStyle: TextStyle(color: Colors.grey.shade400),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                decoration: AppInputDecoration.outlined(
+                  hint: 'Ex: Influenza, COVID-19',
+                  prefixIcon: const Icon(Icons.vaccines, color: AppColors.primary),
                 ),
-                validator: (value) => value == null || value.trim().isEmpty ? 'Campo obrigatório' : null,
+                ),
+                validator: (value) => value == null || value.trim().isEmpty ? 'Obrigatório' : null,
               ),
+              
               const SizedBox(height: 16),
 
-              // Campo: Observação (Opcional)
-              const Text('Observação', style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF34495E))),
-              const SizedBox(height: 8),
+              const Padding(
+                padding: EdgeInsets.only(bottom: 6, left: 4),
+                child: Text('Observação (opcional)', style: TextStyle(fontWeight: FontWeight.w600)),
+              ),
               TextFormField(
                 controller: _obsCtrl,
                 maxLines: 3,
                 textCapitalization: TextCapitalization.sentences,
-                decoration: InputDecoration(
-                  hintText: 'Informações adicionais sobre a vacina',
-                  hintStyle: TextStyle(color: Colors.grey.shade400),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                decoration: AppInputDecoration.outlined(
+                  hint: 'Informações adicionais sobre a vacina',
+                  prefixIcon: const Icon(Icons.notes, color: AppColors.primary),
                 ),
-              ),
-              const SizedBox(height: 24),
-
-              // Botões
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        side: BorderSide(color: Colors.grey.shade300)
-                      )
-                    ),
-                    child: const Text('Cancelar', style: TextStyle(color: Colors.black87)),
-                  ),
-                  const SizedBox(width: 12),
-                  ElevatedButton(
-                    onPressed: _submit,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue, // Utilize a sua AppColors.primary
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    ),
-                    child: const Text('Adicionar', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                  ),
-                ],
+                ),
               ),
             ],
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

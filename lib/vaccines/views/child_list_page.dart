@@ -2,6 +2,7 @@ import 'package:helpacs/imports/import_preview_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../theme/app_colors.dart';
+import '../../theme/app_input_decoration.dart';
 import '../../utils/feedback_helper.dart';
 import '../../utils/list_filter_service.dart';
 import '../providers/child_list_controller.dart';
@@ -9,6 +10,7 @@ import '../dialogs/child_form_dialog.dart';
 import '../models/child_model.dart';
 import 'vaccination_page.dart';
 import '../../imports/import_button.dart';
+
 
 class ChildListPage extends ConsumerStatefulWidget {
   const ChildListPage({super.key});
@@ -150,8 +152,8 @@ class _ChildListPageState extends ConsumerState<ChildListPage> {
       padding: const EdgeInsets.all(16.0),
       child: TextField(
         controller: _searchController,
-        decoration: InputDecoration(
-          hintText: 'Buscar por nome ou responsável...',
+        decoration: AppInputDecoration.outlined(
+          hint: 'Buscar por nome ou responsável...',
           prefixIcon: const Icon(Icons.search),
           suffixIcon: _query.isNotEmpty
               ? IconButton(

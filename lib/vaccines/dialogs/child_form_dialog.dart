@@ -132,7 +132,7 @@ class _ChildFormDialogState extends ConsumerState<ChildFormDialog> {
               _buildLabel('Nome do Paciente'),
               TextFormField(
                 controller: _nameCtrl,
-                decoration: _inputDecoration(hint: 'Ex: João Silva', icon: Icons.person_outline),
+                decoration: AppInputDecoration.outlined(hint: 'Ex: João Silva', prefixIcon: Icons.person_outline),
                 textCapitalization: TextCapitalization.words,
                 validator: (value) => (value == null || value.trim().isEmpty) ? 'O nome é obrigatório' : null,
               ),
@@ -232,9 +232,9 @@ class _ChildFormDialogState extends ConsumerState<ChildFormDialog> {
               TextFormField(
                 controller: _cpfCtrl,
                 keyboardType: TextInputType.number, // Aciona o teclado numérico
-                decoration: _inputDecoration(
+                decoration: AppInputDecoration.outlined(
                   hint: 'Apenas números',
-                  icon: Icons.badge_outlined,
+                  prefixIcon: Icons.badge_outlined,
                 ),
               ),
               const SizedBox(height: 16),
@@ -242,7 +242,10 @@ class _ChildFormDialogState extends ConsumerState<ChildFormDialog> {
               _buildLabel('Responsável (opcional)'),
               TextFormField(
                 controller: _guardianCtrl,
-                decoration: _inputDecoration(hint: 'Mãe, Pai, Avó...', icon: Icons.people_outline),
+                decoration: AppInputDecoration.outlined(
+                  hint: 'Mãe, Pai, Avó...',
+                  prefixIcon: Icons.people_outline,
+                ),
                 textCapitalization: TextCapitalization.words,
               ),
               const SizedBox(height: 16),
@@ -250,7 +253,10 @@ class _ChildFormDialogState extends ConsumerState<ChildFormDialog> {
               _buildLabel('Observações (opcional)'),
               TextFormField(
                 controller: _notesCtrl,
-                decoration: _inputDecoration(hint: 'Alergias, condições especiais, etc.', icon: Icons.notes).copyWith(alignLabelWithHint: true),
+                decoration: AppInputDecoration.outlined(
+                  hint: 'Alergias, condições especiais, etc.',
+                  prefixIcon: Icons.notes,
+                  ).copyWith(alignLabelWithHint: true),
                 maxLines: 3,
                 maxLength: 500,
               ),
@@ -268,19 +274,6 @@ class _ChildFormDialogState extends ConsumerState<ChildFormDialog> {
         text,
         style: TextStyle(color: Colors.grey.shade700, fontWeight: FontWeight.w500, fontSize: 14),
       ),
-    );
-  }
-
-  InputDecoration _inputDecoration({required String hint, required IconData icon}) {
-    return InputDecoration(
-      hintText: hint,
-      prefixIcon: Icon(icon, color: AppColors.primary),
-      filled: true,
-      fillColor: Colors.grey.shade50,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.grey.shade400)),
-      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.grey.shade400)),
-      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppColors.primary, width: 2)),
     );
   }
 }

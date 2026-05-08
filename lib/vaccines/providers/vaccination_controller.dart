@@ -4,16 +4,16 @@ import '../models/child_model.dart';
 import '../models/vaccine_record_model.dart';
 import '../../services/health_status_service.dart';
 
-final vaccinationControllerProvider = AsyncNotifierProvider.family<VaccinationController, ChildModel, dynamic>(() {
+final vaccinationControllerProvider = AsyncNotifierProvider.family<VaccinationController, ChildModel, int>(() {
   return VaccinationController();
 });
 
-class VaccinationController extends FamilyAsyncNotifier<ChildModel, dynamic> {
+class VaccinationController extends FamilyAsyncNotifier<ChildModel, int> {
   late ChildModel _child;
 
   @override
-  Future<ChildModel> build(dynamic arg) async {
-    final box = await Hive.openBox<ChildModel>('childrenBox');
+  Future<ChildModel> build(int arg) async {
+    final box = await Hive.openBox<ChildModel>(HiveKeys.childrenBox);
     
     final child = box.get(arg);
     if (child == null) {

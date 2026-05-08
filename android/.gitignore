@@ -1,14 +1,27 @@
 gradle-wrapper.jar
 /.gradle
-/captures/
 /gradlew
 /gradlew.bat
+
+# Gradle
+.gradle/
 /local.properties
-GeneratedPluginRegistrant.java
+/captures/
 .cxx/
 
-# Remember to never publicly share your keystore.
-# See https://flutter.dev/to/reference-keystore
+# Keystore
 key.properties
 **/*.keystore
 **/*.jks
+
+# Flutter/Dart
+.dart_tool/
+.packages
+build/
+
+# IDE
+.idea/
+.vscode/
+
+# Generated
+GeneratedPluginRegistrant.java
