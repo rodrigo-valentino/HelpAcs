@@ -1,0 +1,93 @@
+name: helpacs
+description: "Ferramenta de trabalho interna."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # =========================
+  # Arquivos e Exportação
+  # =========================
+  file_picker: ^8.1.2
+  csv: ^6.0.0
+  excel: ^4.0.3
+
+  # =========================
+  # Persistência e Sistema
+  # =========================
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  path_provider: ^2.1.2
+  path: ^1.9.0
+  shared_preferences: ^2.2.2
+
+  # =========================
+  # UI e Calendários
+  # =========================
+  cupertino_icons: ^1.0.6
+  table_calendar: ^3.0.9
+  syncfusion_flutter_calendar: ^31.2.5
+
+  # =========================
+  # Estado e Lógica
+  # =========================
+  intl: ^0.20.2
+  provider: ^6.1.1
+  flutter_riverpod: ^2.6.1
+
+  # =========================
+  # Notificações e Recursos
+  # =========================
+  flutter_local_notifications: ^18.0.0
+  timezone: ^0.10.1
+  image_picker: ^1.1.2
+
+  flutter_localizations:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_native_splash: ^2.4.0
+
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.13.1
+
+  # Hive
+  hive_generator: ^2.0.1
+  build_runner: ^2.4.8
+
+  # Riverpod
+  riverpod_generator: ^2.3.9
+
+flutter:
+  uses-material-design: true
+
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/images/logo_foreground.png"
+  adaptive_icon_background: "#A9CCE3"
+  adaptive_icon_foreground: "assets/images/logo_foreground.png"
+  assets:
+    - assets/images/logo_foreground.png
+
+flutter_native_splash:
+  color: "#A9CCE3"
+
+  image: assets/images/logo_foreground.png
+
+  android: true
+  ios: false
+
+  android_12:
+    image: assets/images/logo_foreground.png
+    color: "#A9CCE3"
