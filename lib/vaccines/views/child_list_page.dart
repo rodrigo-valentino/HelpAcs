@@ -190,16 +190,10 @@ class _ChildListPageState extends ConsumerState<ChildListPage> {
     );
   }
 
-  Widget _buildChildrenList(List<ChildModel> allChildren) {
-    // 2. Aplica filtros na lista vinda do Hive
-    final filteredList = ListFilterService.filter<ChildModel>(
-      items: allChildren,
-      query: _query,
-      selectors: (child) => [child.name, child.guardianName],
-    );
+  Widget _buildChildrenList(List<ChildModel> children) { 
 
     final sortedList = ListFilterService.sort<ChildModel>(
-      items: filteredList,
+      items: children,
       sortType: _currentSort,
       getName: (child) => child.name,
       getAge: (child) => child.ageInDays, 
@@ -218,7 +212,7 @@ class _ChildListPageState extends ConsumerState<ChildListPage> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
           child: Text(
-            'Total: ${allChildren.length} pacientes cadastrados',
+            'Total: ${children.length} pacientes cadastrados',
             style: TextStyle(
               color: Colors.grey.shade600,
               fontSize: 14,
@@ -344,6 +338,21 @@ class _ChildListPageState extends ConsumerState<ChildListPage> {
                   ],
                 ),
               ),
+              
+              // 🆕 BOTÃO DE EDIÇÃO ADICIONADO AQUI
+              if (!isSelected) // Só mostra o lápis se não estiver no modo de apagar
+                IconButton(
+                  icon: const Icon(Icons.edit_outlined, color: AppColors.primary),
+                  tooltip: 'Editar Paciente',
+                  onPressed: () {
+                    // Chama o dialog que você já tem, passando a criança atual!
+                    showDialog(
+                      context: context,
+                      builder: (context) => ChildFormDialog(childToEdit: child),
+                    );
+                  },
+                ),
+                
               const Icon(Icons.chevron_right, color: Colors.grey),
             ],
           ),

@@ -11,7 +11,7 @@ import './vaccines/models/campaign_vaccine_model.dart';
 import './profile/models/profile_model.dart';
 import './theme/app_colors.dart';
 import './enums/health_status.dart';
-
+import './nutrition/models/nutrition_record_model.dart';
 
 void main() async {
   // 1. Garante que a ponte entre o Flutter e o código nativo está inicializada
@@ -26,6 +26,11 @@ void main() async {
   Hive.registerAdapter(ProfileModelAdapter());      // TypeId: 2
   Hive.registerAdapter(VaccineRecordAdapter());     // TypeId: 3 
   Hive.registerAdapter(CampaignVaccineModelAdapter()); // TypeId: 4
+  Hive.registerAdapter(NutritionAnswerAdapter()); // TypeId: 5
+  Hive.registerAdapter(FoodFrequencyAdapter());    // TypeId: 6
+  Hive.registerAdapter(FoodConsistencyAdapter());    // TypeId: 7
+  Hive.registerAdapter(AgeCategoryAdapter());         // TypeId: 8
+  Hive.registerAdapter(NutritionRecordModelAdapter()); // TypeId: 9
   // 4. Inicia a aplicação. 
   // O ProviderScope é obrigatório para que os Providers do Riverpod funcionem.
   runApp(

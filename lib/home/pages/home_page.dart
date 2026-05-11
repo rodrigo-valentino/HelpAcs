@@ -4,6 +4,7 @@ import '../../profile/controllers/profile_controller.dart';
 import '../../theme/app_colors.dart';
 import '../../vaccines/views/child_list_page.dart';
 import '../../profile/pages/profile_page.dart';
+import '../../nutrition/views/nutrition_children_list_page.dart';
 // Importe seus caminhos corretos aqui
 
 class HomePage extends ConsumerWidget {
@@ -164,16 +165,11 @@ class HomePage extends ConsumerWidget {
                     icon: Icons.restaurant_menu_rounded,
                     color: Colors.orange,
                     onTap: () {
-                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Módulo Anotações em breve!")),
+                        Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const NutritionChildrenListPage()),
                       );
                     },
-                    // onTap: () {
-                    //     Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(builder: (_) => const NutritionChildrenListPage()),
-                    //   );
-                    // },
                   ),
                   _HomeModuleCard(
                     title: "Anotações",
