@@ -72,8 +72,8 @@ class _ChildListPageState extends ConsumerState<ChildListPage> {
   @override
   Widget build(BuildContext context) {
     // 1. Escuta o provider que agora busca os dados do Hive
-    final asyncChildren = ref.watch(childListControllerProvider);
-
+    final filteredList = ref.watch(filteredChildrenProvider);
+    
     return Scaffold(
       appBar: AppBar(
         title: _selectionController.isSelectionMode
@@ -133,38 +133,54 @@ class _ChildListPageState extends ConsumerState<ChildListPage> {
 
       body: Column(
         children: [
-          _buildSearchBar(),
+          _buildSearchBar(ref),
+
           Expanded(
-            child: asyncChildren.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(child: Text('Erro ao carregar dados: $err')),
-              // ✅ Passa a lista completa vinda do Hive
-              data: (allChildren) => _buildChildrenList(allChildren),
-            ),
+            child: filteredList.isEmpty
+                ? const Center(
+                    child: Text(
+                      'Nenhuma criança encontrada',
+                    ),
+                  )
+                : _buildChildrenList(filteredList),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildSearchBar() {
+  Widget _buildSearchBar(WidgetRef ref) {
+    final query = ref.watch(childSearchQueryProvider);
+
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16),
       child: TextField(
         controller: _searchController,
+
         onChanged: (value) {
-          setState(() => _query = value);
+          ref
+              .read(childSearchQueryProvider.notifier)
+              .state = value;
         },
+
         decoration: AppInputDecoration.outlined(
           hint: 'Buscar por nome ou responsável...',
           prefixIcon: Icons.search,
-        ).copyWith(
-          suffixIcon: _query.isNotEmpty
+
+          suffixIcon: query.isNotEmpty
               ? IconButton(
-                  icon: const Icon(Icons.clear, size: 20),
+                  icon: const Icon(
+                    Icons.clear,
+                    size: 20,
+                  ),
                   onPressed: () {
                     _searchController.clear();
-                    setState(() => _query = '');
+
+                    ref
+                        .read(
+                          childSearchQueryProvider.notifier,
+                        )
+                        .state = '';
                   },
                 )
               : null,

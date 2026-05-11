@@ -8,6 +8,7 @@ class AppInputDecoration {
     String? hint,
     String? label,
     IconData? prefixIcon,
+    Widget? suffixIcon,
   }) {
     return InputDecoration(
       hintText: hint,

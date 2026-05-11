@@ -1,7 +1,6 @@
 name: helpacs
 description: "Ferramenta de trabalho interna."
 publish_to: 'none'
-
 version: 1.0.0+1
 
 environment:
@@ -10,7 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  flutter_localizations:
+    sdk: flutter
   # =========================
   # Arquivos e Exportação
   # =========================
@@ -48,9 +48,6 @@ dependencies:
   flutter_local_notifications: ^18.0.0
   timezone: ^0.10.1
   image_picker: ^1.1.2
-
-  flutter_localizations:
-    sdk: flutter
 
 dev_dependencies:
   flutter_test:

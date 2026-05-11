@@ -8,6 +8,25 @@ final childListControllerProvider = AsyncNotifierProvider<ChildListController, L
   return ChildListController();
 });
 
+// 1. Provider para guardar o texto da busca
+final childSearchQueryProvider = StateProvider<String>((ref) => '');
+
+// 2. O FILTRO INTELIGENTE (PERF 1)
+final filteredChildrenProvider = Provider<List<ChildModel>>((ref) {
+  // Escuta a lista vinda do banco
+  final allChildren = ref.watch(childListControllerProvider).valueOrNull ?? [];
+  // Escuta o texto da busca
+  final query = ref.watch(childSearchQueryProvider).toLowerCase();
+
+  if (query.isEmpty) return allChildren;
+
+  // Realiza o filtro apenas quando necessário
+  return allChildren.where((child) {
+    return child.name.toLowerCase().contains(query) || 
+           (child.guardianName?.toLowerCase().contains(query) ?? false);
+  }).toList();
+});
+
 class ChildListController extends AsyncNotifier<List<ChildModel>> {
   @override
   Future<List<ChildModel>> build() async {

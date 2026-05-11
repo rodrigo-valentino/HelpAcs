@@ -73,7 +73,7 @@ class _ChildFormDialogState extends ConsumerState<ChildFormDialog> {
       onSubmit: () async {
         if (_birthDate == null) {
           setState(() => _dateError = 'A data de nascimento é obrigatória');
-          throw Exception('Data obrigatória');
+          return; // Apenas para a execução aqui. O BaseFormDialog não fechará.
         }
         
         bool dateChanged = false;
@@ -142,14 +142,15 @@ class _ChildFormDialogState extends ConsumerState<ChildFormDialog> {
               _buildLabel('Data de nascimento'),
               InkWell(
                 onTap: () async {
-                  final now = DateTime.now();
+                  FocusScope.of(context).unfocus();
                   final date = await showCupertinoDatePickerModal(
                     context: context,
-                    initialDate: _birthDate ?? now, 
+                    initialDate: _birthDate ?? DateTime.now(), 
                     firstDate: DateTime(2000), 
-                    lastDate: now, 
+                    lastDate: DateTime.now(), 
                     title: "Data de Nascimento",
                   );
+
                   if (date != null) {
                     setState(() {
                       _birthDate = date;
@@ -202,7 +203,8 @@ class _ChildFormDialogState extends ConsumerState<ChildFormDialog> {
                   ),
                 ),
                 
-              if (isEditing && _birthDate != widget.childToEdit!.birthDate)
+              if (isEditing && _birthDate != null && 
+                  !_birthDate!.dateOnly.isAtSameMomentAs(widget.childToEdit!.birthDate.dateOnly))
                 Padding(
                   padding: const EdgeInsets.only(top: 8, bottom: 8),
                   child: Container(
