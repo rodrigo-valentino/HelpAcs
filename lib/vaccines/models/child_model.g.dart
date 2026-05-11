@@ -25,13 +25,14 @@ class ChildModelAdapter extends TypeAdapter<ChildModel> {
       status: fields[5] as HealthStatus,
       imagePaths: (fields[6] as List?)?.cast<String>(),
       vaccines: (fields[7] as List?)?.cast<VaccineRecord>(),
+      campaignVaccines: (fields[8] as List?)?.cast<CampaignVaccineModel>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, ChildModel obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class ChildModelAdapter extends TypeAdapter<ChildModel> {
       ..writeByte(6)
       ..write(obj.imagePaths)
       ..writeByte(7)
-      ..write(obj.vaccines);
+      ..write(obj.vaccines)
+      ..writeByte(8)
+      ..write(obj.campaignVaccines);
   }
 
   @override

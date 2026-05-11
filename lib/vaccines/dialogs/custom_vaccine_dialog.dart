@@ -56,6 +56,7 @@ class _CustomVaccineDialogState extends ConsumerState<CustomVaccineDialog> {
                   ? null
                   : _obsCtrl.text.trim(),
             );
+        return true;
       },
 
       builder: (formKey) {

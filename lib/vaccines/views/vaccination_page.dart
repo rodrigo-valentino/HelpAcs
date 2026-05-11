@@ -8,6 +8,9 @@ import '../../utils/date_formatter.dart';
 import '../../widgets/document_gallery_widget.dart'; 
 import '../dialogs/custom_vaccine_dialog.dart';
 import '../../theme/app_colors.dart';
+import '../models/campaign_vaccine_model.dart';
+import '../dialogs/campaign_vaccine_dialog.dart';
+import '../providers/campaign_controller.dart';
 
 class VaccinationPage extends ConsumerStatefulWidget {
   final ChildModel child;
@@ -19,7 +22,7 @@ class VaccinationPage extends ConsumerStatefulWidget {
 }
 
 class _VaccinationPageState extends ConsumerState<VaccinationPage> {
-  // 0 = Cronograma, 1 = Caderneta
+  // 0 = Cronograma, 1 = Caderneta 2 = Campanhas
   int _currentTabIndex = 0; 
 
   @override
@@ -46,7 +49,9 @@ class _VaccinationPageState extends ConsumerState<VaccinationPage> {
               Expanded(
                 child: _currentTabIndex == 0
                     ? _buildVaccineTimeline(context, ref, currentChild)
-                    : _buildCadernetaView(currentChild),
+                    : _currentTabIndex == 1
+                        ? _buildCampaignsView(currentChild)
+                        : _buildCadernetaView(currentChild),
               ),
             ],
           );
@@ -55,12 +60,13 @@ class _VaccinationPageState extends ConsumerState<VaccinationPage> {
     );
   }
 
-  // --- Abas Clicáveis ---
+ // --- Abas Clicáveis ---
   Widget _buildTabs() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         children: [
+          // 1. Aba: Cronograma (Index 0)
           Expanded(
             child: GestureDetector(
               onTap: () => setState(() => _currentTabIndex = 0),
@@ -73,16 +79,21 @@ class _VaccinationPageState extends ConsumerState<VaccinationPage> {
                 ),
                 alignment: Alignment.center,
                 child: Text(
-                  'Cronograma de Vacinas', 
+                  'Cronograma', 
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: _currentTabIndex == 0 ? Colors.white : AppColors.primary, 
-                    fontWeight: FontWeight.bold
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
                   ),
                 ),
               ),
             ),
           ),
           const SizedBox(width: 8),
+
+          // 2. Aba: Campanhas (Index 1) - NOVA ABA
           Expanded(
             child: GestureDetector(
               onTap: () => setState(() => _currentTabIndex = 1),
@@ -95,10 +106,40 @@ class _VaccinationPageState extends ConsumerState<VaccinationPage> {
                 ),
                 alignment: Alignment.center,
                 child: Text(
-                  'Caderneta de Vacinação', 
+                  'Campanhas', 
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: _currentTabIndex == 1 ? Colors.white : AppColors.primary,
-                    fontWeight: FontWeight.bold
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 8),
+
+          // 3. Aba: Caderneta (Index 2)
+          Expanded(
+            child: GestureDetector(
+              onTap: () => setState(() => _currentTabIndex = 2), // Atualizado para index 2
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                decoration: BoxDecoration(
+                  color: _currentTabIndex == 2 ? AppColors.primary : Colors.white,
+                  border: _currentTabIndex == 2 ? null : Border.all(color: Colors.grey.shade300),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  'Caderneta', 
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: _currentTabIndex == 2 ? Colors.white : AppColors.primary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
                   ),
                 ),
               ),
@@ -175,29 +216,37 @@ class _VaccinationPageState extends ConsumerState<VaccinationPage> {
   }
 
   Widget _buildVaccineTimeline(BuildContext context, WidgetRef ref, ChildModel currentChild) {
-    // Agrupamento de Vacinas pela regra oficial
-    final groupedRules = <String, List<dynamic>>{};
+    // 1. Agrupa as regras oficiais do calendário
+    final groupedRules = <String, List<VaccineRule>>{};
     for (var rule in HealthStatusService.vaccineRules) {
       groupedRules.putIfAbsent(rule.group, () => []).add(rule);
     }
 
+    // ✅ 2. Agrupa as vacinas personalizadas da criança (BUG 1 Corrigido)
+    final customByGroup = <String, List<VaccineRecord>>{};
+    for (final record in currentChild.vaccines.where((r) => r.isCustom)) {
+      customByGroup.putIfAbsent(record.group, () => []).add(record);
+    }
+
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-
-    // Estrutura para ordenar: [GroupName, isCompleted, isFuture, widgets]
     final groupList = [];
 
-    for (var entry in groupedRules.entries) {
-      final groupName = entry.key;
-      final rules = entry.value;
+    // ✅ 3. Une todos os grupos (oficiais + customizados)
+    final allGroups = {...groupedRules.keys, ...customByGroup.keys}.toList();
+
+    for (final groupName in allGroups) {
+      final officialRules = groupedRules[groupName] ?? [];
+      final customRecords = customByGroup[groupName] ?? [];
 
       final dueDate = HealthStatusService.calculateDueDate(currentChild.birthDate, groupName);
-      final isFuture = dueDate.isAfter(today); // RF06
+      final isFuture = dueDate.isAfter(today);
 
       bool allApplied = true;
       final vaccineCards = <Widget>[];
 
-      for (var rule in rules) {
+      // Renderiza as vacinas OFICIAIS
+      for (var rule in officialRules) {
         final record = currentChild.vaccines.firstWhere(
           (r) => r.name == rule.name && r.doseNumber == rule.doseNumber && r.group == groupName,
           orElse: () => VaccineRecord(name: rule.name, doseNumber: rule.doseNumber, group: groupName),
@@ -214,29 +263,41 @@ class _VaccinationPageState extends ConsumerState<VaccinationPage> {
             dueDate: dueDate,
             isApplied: record.applied,
             isFuture: isFuture,
+            isCustom: false,
+          )
+        );
+      }
+
+      // ✅ Renderiza as vacinas PERSONALIZADAS
+      for (var custom in customRecords) {
+        if (!custom.applied) allApplied = false;
+
+        vaccineCards.add(
+          _VaccineCardWidget(
+            childKey: currentChild.key,
+            ruleName: custom.name,
+            groupName: custom.group,
+            doseNumber: custom.doseNumber,
+            dueDate: dueDate, // Usa a mesma data base do grupo
+            isApplied: custom.applied,
+            isFuture: isFuture,
+            isCustom: true,
           )
         );
       }
 
       groupList.add({
         'name': groupName,
-        'isCompleted': allApplied,
+        'isCompleted': allApplied && vaccineCards.isNotEmpty, // Garante que grupos vazios não fiquem "completos"
         'isFuture': isFuture,
         'cards': vaccineCards,
       });
     }
 
-    // RF05: Organização Inteligente da Lista
     groupList.sort((a, b) {
-      // 1. Grupos Concluídos vão para o final
-      if (a['isCompleted'] != b['isCompleted']) {
-        return a['isCompleted'] ? 1 : -1;
-      }
-      // 2. Grupos Futuros vão para o meio (abaixo dos pendentes, acima dos concluídos)
-      if (a['isFuture'] != b['isFuture']) {
-        return a['isFuture'] ? 1 : -1;
-      }
-      return 0; // Mantém a ordem original do calendário para os empatados
+      if (a['isCompleted'] != b['isCompleted']) return a['isCompleted'] ? 1 : -1;
+      if (a['isFuture'] != b['isFuture']) return a['isFuture'] ? 1 : -1;
+      return 0; 
     });
 
     return ListView.builder(
@@ -244,13 +305,19 @@ class _VaccinationPageState extends ConsumerState<VaccinationPage> {
       itemCount: groupList.length,
       itemBuilder: (context, index) {
         final group = groupList[index];
-        // 👇 1. Passamos o context e o currentChild aqui!
-        return _buildGroupSection(context, group['name'], group['cards'], group['isCompleted'], currentChild);
+        return _buildGroupSection(context, group['name'], group['cards'], group['isCompleted'], group['isFuture'], currentChild);
       },
     );
   }
 
-  Widget _buildGroupSection(BuildContext context, String groupName, List<Widget> cards, bool isCompleted, ChildModel currentChild) {
+  Widget _buildGroupSection(BuildContext context, String groupName, List<Widget> cards, bool isCompleted, bool isFutureGroup, ChildModel currentChild) {
+   
+    final officialCards = cards.whereType<_VaccineCardWidget>().where((c) => !c.isCustom).toList();
+    final appliedCount = officialCards.where((c) => c.isApplied).length;
+    final total = officialCards.length;
+    final allDone = total > 0 && appliedCount == total;
+    final noneDone = appliedCount == 0;
+   
     return Opacity(
       opacity: isCompleted ? 0.6 : 1.0, // Suaviza o grupo inteiro se estiver finalizado
       child: Container(
@@ -268,6 +335,25 @@ class _VaccinationPageState extends ConsumerState<VaccinationPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  InkWell(
+                        onTap: (total == 0 || (isFutureGroup && !allDone)) ? null : () {
+                          ref.read(vaccinationControllerProvider(currentChild.key as int).notifier)
+                             .toggleGroupVaccines(groupName: groupName, markAll: !allDone);
+                        },
+                    child: Container(
+                      width: 22, height: 22,
+                      decoration: BoxDecoration(
+                        color: allDone ? AppColors.primary : Colors.white,
+                        border: Border.all(
+                          color: allDone ? AppColors.primary : (noneDone ? Colors.grey.shade400 : AppColors.warning),
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: allDone ? const Icon(Icons.check, color: Colors.white, size: 16)
+                          : (!noneDone ? const Icon(Icons.remove, color: AppColors.warning, size: 16) : null),
+                    ),
+                  ),
                   Text(groupName, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   TextButton.icon(
                     onPressed: () {
@@ -292,6 +378,74 @@ class _VaccinationPageState extends ConsumerState<VaccinationPage> {
       ),
     );
   }
+
+  Widget _buildCampaignsView(ChildModel currentChild) {
+    // Ordena da mais recente para a mais antiga
+    final list = List<CampaignVaccineModel>.from(currentChild.campaignVaccines);
+    list.sort((a, b) => b.year.compareTo(a.year));
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Vacinas de campanhas anuais e sazonais',
+                style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+              ),
+              FilledButton.icon(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => CampaignVaccineDialog(childKey: currentChild.key as int),
+                  );
+                },
+                icon: const Icon(Icons.add, size: 16),
+                label: const Text('Nova Vacina'),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: list.isEmpty
+              ? Center(
+                  child: Text('Nenhuma vacina de campanha registrada.',
+                      style: TextStyle(color: Colors.grey.shade500)))
+              : ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: list.length,
+                  itemBuilder: (context, index) {
+                    final record = list[index];
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.grey.shade300),
+                      ),
+                      child: ListTile(
+                        leading: const Icon(Icons.vaccines, color: AppColors.primary),
+                        title: Text(record.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+                        subtitle: Text('Ano: ${record.year}'),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.delete_outline, color: Colors.red),
+                          onPressed: () {
+                            ref.read(campaignControllerProvider).deleteCampaignVaccine(
+                              childKey: currentChild.key as int,
+                              record: record,
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
+        ),
+      ],
+    );
+  }
 }
 
 /// RV01: O Card Visual de cada Vacina
@@ -303,6 +457,7 @@ class _VaccineCardWidget extends ConsumerWidget {
   final DateTime dueDate;
   final bool isApplied;
   final bool isFuture;
+  final bool isCustom;
 
   const _VaccineCardWidget({
     required this.childKey,
@@ -312,6 +467,7 @@ class _VaccineCardWidget extends ConsumerWidget {
     required this.dueDate,
     required this.isApplied,
     required this.isFuture,
+    this.isCustom = false,
   });
 
   @override
@@ -393,7 +549,49 @@ class _VaccineCardWidget extends ConsumerWidget {
             ),
           ],
         ),
-        trailing: trailingIcon != null ? Icon(trailingIcon, color: trailingColor) : null,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Precisamos buscar o record real na lista para ver se tem observação
+            Builder(
+              builder: (context) {
+                final child = ref.watch(vaccinationControllerProvider(childKey as int)).valueOrNull;
+                final record = child?.vaccines.where((r) => r.name == ruleName && r.group == groupName && r.doseNumber == doseNumber).firstOrNull;
+                
+                if (record?.observation != null && record!.observation!.isNotEmpty) {
+                  return IconButton(
+                    icon: Icon(Icons.info_outline, color: AppColors.primary, size: 22),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) => Padding(
+                          padding: const EdgeInsets.all(24),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Observação - $ruleName', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                              const SizedBox(height: 12),
+                              Text(record.observation!, style: const TextStyle(fontSize: 16)),
+                              const SizedBox(height: 24),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
+                return const SizedBox.shrink();
+              }
+            ),
+            if (trailingIcon != null) ...[
+              const SizedBox(width: 12),
+              Icon(trailingIcon, color: trailingColor),
+            ]
+          ],
+        ),
       ),
     );
   }

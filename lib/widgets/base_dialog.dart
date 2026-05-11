@@ -142,7 +142,7 @@ class BaseFormDialog extends StatefulWidget {
   final IconData? icon;
   final Color? iconColor;
   final Widget Function(GlobalKey<FormState> formKey) builder;
-  final Future<void> Function() onSubmit;
+  final Future<bool> Function() onSubmit;
   final String saveButtonText;
   final Color? saveButtonColor;
   final bool isEditMode;
@@ -174,8 +174,8 @@ class _BaseFormDialogState extends State<BaseFormDialog> {
       setState(() => _isLoading = true);
       
       try {
-        await widget.onSubmit();
-        if (mounted) {
+        final success = await widget.onSubmit(); 
+        if (success && mounted) { 
           Navigator.of(context).pop();
         }
       } catch (e) {

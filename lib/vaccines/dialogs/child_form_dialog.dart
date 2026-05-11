@@ -73,7 +73,7 @@ class _ChildFormDialogState extends ConsumerState<ChildFormDialog> {
       onSubmit: () async {
         if (_birthDate == null) {
           setState(() => _dateError = 'A data de nascimento é obrigatória');
-          return; // Apenas para a execução aqui. O BaseFormDialog não fechará.
+          return false; // Apenas para a execução aqui. O BaseFormDialog não fechará.
         }
         
         bool dateChanged = false;
@@ -93,7 +93,7 @@ class _ChildFormDialogState extends ConsumerState<ChildFormDialog> {
             cancelText: 'Cancelar',
             confirmColor: AppColors.error, 
           );
-          if (!confirm) return; 
+          if (!confirm) return false; 
         }
 
         final notifier = ref.read(childListControllerProvider.notifier);
@@ -119,9 +119,10 @@ class _ChildFormDialogState extends ConsumerState<ChildFormDialog> {
               guardianName: _guardianCtrl.text.trim(),
               notes: _notesCtrl.text.trim(),
               cpf: finalCpf,
-            )
+            ),
           );
         }
+        return true;
       },
       
       builder: (formKey) {

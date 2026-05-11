@@ -7,9 +7,11 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 // Importação dos seus modelos e dos ficheiros gerados pelo build_runner
 import './vaccines/models/child_model.dart';
 import './vaccines/models/vaccine_record_model.dart'; 
+import './vaccines/models/campaign_vaccine_model.dart';
 import './profile/models/profile_model.dart';
 import './theme/app_colors.dart';
 import './enums/health_status.dart';
+
 
 void main() async {
   // 1. Garante que a ponte entre o Flutter e o código nativo está inicializada
@@ -23,7 +25,7 @@ void main() async {
   Hive.registerAdapter(ChildModelAdapter());        // TypeId: 1
   Hive.registerAdapter(ProfileModelAdapter());      // TypeId: 2
   Hive.registerAdapter(VaccineRecordAdapter());     // TypeId: 3 
-
+  Hive.registerAdapter(CampaignVaccineModelAdapter()); // TypeId: 4
   // 4. Inicia a aplicação. 
   // O ProviderScope é obrigatório para que os Providers do Riverpod funcionem.
   runApp(

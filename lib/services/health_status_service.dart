@@ -27,13 +27,19 @@ class HealthStatusService {
  VaccineRule(group: '2 meses', name: 'Rotavírus', doseNumber: 1),
 
  VaccineRule(group: '3 meses', name: 'Meningocócica C', doseNumber: 1),
-
+ 
+ VaccineRule(group: '4 meses', name: 'Penta (DTP+Hib+HepB)', doseNumber: 2),
+ VaccineRule(group: '4 meses', name: 'VIP (Pólio Inativada)', doseNumber: 2),
+ VaccineRule(group: '4 meses', name: 'Pneumocócica 10v', doseNumber: 2),
  VaccineRule(group: '4 meses', name: 'Rotavírus', doseNumber: 2),
 
  VaccineRule(group: '5 meses', name: 'Meningocócica C', doseNumber: 2),
 
  VaccineRule(group: '6 meses', name: 'Penta (DTP+Hib+HepB)', doseNumber: 3),
  VaccineRule(group: '6 meses', name: 'VIP (Pólio Inativada)', doseNumber: 3),
+ VaccineRule(group: '6 meses', name: 'Influenza Trivalente', doseNumber: 1),
+
+ VaccineRule(group: '7 meses', name: 'Influenza Trivalente', doseNumber: 2),
 
  VaccineRule(group: '9 meses', name: 'Febre Amarela', doseNumber: 1),
 
@@ -51,7 +57,7 @@ class HealthStatusService {
  VaccineRule(group: '4 anos', name: 'Varicela', doseNumber: 2),
  VaccineRule(group: '4 anos', name: 'Febre Amarela', doseNumber: 2),
 
- VaccineRule(group: '11 a 14 anos', name: 'HPV', doseNumber: 2),
+ VaccineRule(group: '11 a 14 anos', name: 'HPV', doseNumber: 1),
 ];
 
   /// RN05: Calcula a data exata em que a vacina deve ser tomada com base no nascimento

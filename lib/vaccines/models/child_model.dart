@@ -3,6 +3,7 @@ import 'package:hive/hive.dart';
 import 'vaccine_record_model.dart';
 import '/utils/date_formatter.dart';
 import '../../enums/health_status.dart';
+import 'campaign_vaccine_model.dart';
 
 part 'child_model.g.dart';
 
@@ -33,6 +34,9 @@ class ChildModel extends HiveObject {
   @HiveField(7)
   List<VaccineRecord> vaccines;
 
+  @HiveField(8) // Use o próximo número disponível no seu ChildModel
+  List<CampaignVaccineModel> campaignVaccines;
+
   ChildModel({
     required this.name,
     required this.birthDate,
@@ -42,8 +46,10 @@ class ChildModel extends HiveObject {
     this.status = HealthStatus.pending,
     List<String>? imagePaths,
     List<VaccineRecord>? vaccines,
+    List<CampaignVaccineModel>? campaignVaccines,
   })  : imagePaths = imagePaths ?? [],
-        vaccines = vaccines ?? [];
+        vaccines = vaccines ?? [],
+        campaignVaccines = campaignVaccines ?? [];
 
   // =========================
   // Helpers

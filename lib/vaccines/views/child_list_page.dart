@@ -11,6 +11,7 @@ import '../models/child_model.dart';
 import 'vaccination_page.dart';
 import '../../imports/import_button.dart';
 import '../../services/health_status_badge.dart';
+import '../../enums/health_status.dart';
 
 class ChildListPage extends ConsumerStatefulWidget {
   const ChildListPage({super.key});
@@ -202,7 +203,13 @@ class _ChildListPageState extends ConsumerState<ChildListPage> {
       sortType: _currentSort,
       getName: (child) => child.name,
       getAge: (child) => child.ageInDays, 
-      getStatusWeight: (child) => child.status.index, // Adaptado para o seu Enum do Hive
+      getStatusWeight: (child) {
+        switch (child.status) {
+          case HealthStatus.overdue: return 3; // 🚨 Atrasados sempre no topo (Prioridade 1)
+          case HealthStatus.warning: return 2; // ⚠️ Atenção (Prioridade 2)
+          case HealthStatus.pending: return 1; // ⏳ Pendente / Novo cadastro (Prioridade 3)
+          case HealthStatus.upToDate: return 0; }
+      },
     );
 
     return Column(
