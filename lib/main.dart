@@ -4,9 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-// Importação dos seus modelos e dos ficheiros gerados pelo build_runner
 import './vaccines/models/child_model.dart';
-import './vaccines/models/vaccine_record_model.dart'; 
+import './vaccines/models/vaccine_record_model.dart';
 import './vaccines/models/campaign_vaccine_model.dart';
 import './profile/models/profile_model.dart';
 import './theme/app_colors.dart';
@@ -14,25 +13,23 @@ import './enums/health_status.dart';
 import './nutrition/models/nutrition_record_model.dart';
 
 void main() async {
-  // 1. Garante que a ponte entre o Flutter e o código nativo está inicializada
   WidgetsFlutterBinding.ensureInitialized();
-
-  // 2. Inicializa o Hive especificamente para o Flutter (prepara o diretório local)
   await Hive.initFlutter();
 
-  // 3. Regista os Adapters (Gerados pelo build_runner)
-  Hive.registerAdapter(HealthStatusAdapter());      // TypeId: 0
-  Hive.registerAdapter(ChildModelAdapter());        // TypeId: 1
-  Hive.registerAdapter(ProfileModelAdapter());      // TypeId: 2
-  Hive.registerAdapter(VaccineRecordAdapter());     // TypeId: 3 
-  Hive.registerAdapter(CampaignVaccineModelAdapter()); // TypeId: 4
-  Hive.registerAdapter(NutritionAnswerAdapter()); // TypeId: 5
-  Hive.registerAdapter(FoodFrequencyAdapter());    // TypeId: 6
-  Hive.registerAdapter(FoodConsistencyAdapter());    // TypeId: 7
-  Hive.registerAdapter(AgeCategoryAdapter());         // TypeId: 8
-  Hive.registerAdapter(NutritionRecordModelAdapter()); // TypeId: 9
-  // 4. Inicia a aplicação. 
-  // O ProviderScope é obrigatório para que os Providers do Riverpod funcionem.
+  Hive.registerAdapter(HealthStatusAdapter());          // TypeId: 0
+  Hive.registerAdapter(ChildModelAdapter());            // TypeId: 1
+  Hive.registerAdapter(ProfileModelAdapter());          // TypeId: 2
+  Hive.registerAdapter(VaccineRecordAdapter());         // TypeId: 3
+  Hive.registerAdapter(CampaignVaccineModelAdapter());  // TypeId: 4
+  // TypeIds 5 e 6 estão livres (reservados para uso futuro)
+  Hive.registerAdapter(FoodConsistencyAdapter());       // TypeId: 7
+  // TypeIds 8, 9 estão livres
+  Hive.registerAdapter(NutritionAnswerAdapter());       // TypeId: 10
+  Hive.registerAdapter(FoodFrequencyAdapter());         // TypeId: 11
+  // TypeId 12 está livre
+  Hive.registerAdapter(AgeCategoryAdapter());           // TypeId: 13
+  Hive.registerAdapter(NutritionRecordModelAdapter());  // TypeId: 14
+
   runApp(
     const ProviderScope(
       child: MyApp(),
@@ -47,26 +44,20 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'App de Serviço e Acompanhamento',
-      debugShowCheckedModeBanner: false, 
-      
-      // ========================================================
-      // 🌐 DELEGATES DE TRADUÇÃO (Corrige o crash do DatePicker)
-      // ========================================================
+      debugShowCheckedModeBanner: false,
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate, // Necessário para o CupertinoDatePicker
+        GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [
-        Locale('pt', 'BR'), // Força o app para Português do Brasil
+        Locale('pt', 'BR'),
       ],
-      
-      // Definição do Tema Global (Material Design 3)
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColors.primary, 
-          surface: AppColors.background, 
+          seedColor: AppColors.primary,
+          surface: AppColors.background,
         ),
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.transparent,
@@ -80,7 +71,6 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      
       home: const HomePage(),
     );
   }

@@ -10,18 +10,20 @@ class NutritionChildrenListPage extends ConsumerStatefulWidget {
   const NutritionChildrenListPage({super.key});
 
   @override
-  ConsumerState<NutritionChildrenListPage> createState() => _NutritionChildrenListPageState();
+  ConsumerState<NutritionChildrenListPage> createState() =>
+      _NutritionChildrenListPageState();
 }
 
-class _NutritionChildrenListPageState extends ConsumerState<NutritionChildrenListPage> {
+class _NutritionChildrenListPageState
+    extends ConsumerState<NutritionChildrenListPage> {
   final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    // 🚀 Atualiza o provedor de busca do Riverpod sem dar setState na tela inteira
     _searchController.addListener(() {
-      ref.read(nutritionSearchQueryProvider.notifier).state = _searchController.text;
+      ref.read(nutritionSearchQueryProvider.notifier).state =
+          _searchController.text;
     });
   }
 
@@ -33,14 +35,32 @@ class _NutritionChildrenListPageState extends ConsumerState<NutritionChildrenLis
 
   @override
   Widget build(BuildContext context) {
-    // 🚀 Assiste diretamente a lista JÁ FILTRADA E ORDENADA do provedor derivado
     final asyncFilteredChildren = ref.watch(filteredNutritionChildrenProvider);
     final currentQuery = ref.watch(nutritionSearchQueryProvider);
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Nutrição Infantil'),
+        title: asyncFilteredChildren.when(
+          data: (children) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text('Nutrição Infantil'),
+              Text(
+                currentQuery.isEmpty
+                    ? '${children.length} crianças cadastradas'
+                    : '${children.length} resultado${children.length == 1 ? '' : 's'} encontrado${children.length == 1 ? '' : 's'}',
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          loading: () => const Text('Nutrição Infantil'),
+          error:   (_, __) => const Text('Nutrição Infantil'),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.analytics_outlined, color: AppColors.primary),
@@ -63,8 +83,8 @@ class _NutritionChildrenListPageState extends ConsumerState<NutritionChildrenLis
           Expanded(
             child: asyncFilteredChildren.when(
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(child: Text('Erro: $err')),
-              data: (children) => _buildChildrenList(children, currentQuery),
+              error:   (err, _) => Center(child: Text('Erro: $err')),
+              data:    (children) => _buildChildrenList(children, currentQuery),
             ),
           ),
         ],
@@ -83,15 +103,13 @@ class _NutritionChildrenListPageState extends ConsumerState<NutritionChildrenLis
           suffixIcon: query.isNotEmpty
               ? IconButton(
                   icon: const Icon(Icons.clear, size: 20),
-                  onPressed: () {
-                    _searchController.clear();
-                    // O listener do initState já vai atualizar o provedor para ''
-                  },
+                  onPressed: () => _searchController.clear(),
                 )
               : null,
           filled: true,
           fillColor: Colors.white,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: const BorderSide(color: AppColors.border),
@@ -116,9 +134,7 @@ class _NutritionChildrenListPageState extends ConsumerState<NutritionChildrenLis
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       itemCount: children.length,
       separatorBuilder: (_, __) => const SizedBox(height: 12),
-      itemBuilder: (context, index) {
-        return _buildChildCard(children[index]);
-      },
+      itemBuilder: (context, index) => _buildChildCard(children[index]),
     );
   }
 
@@ -148,9 +164,7 @@ class _NutritionChildrenListPageState extends ConsumerState<NutritionChildrenLis
                 child: Text(
                   child.name.isNotEmpty ? child.name[0].toUpperCase() : '?',
                   style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.primary,
-                  ),
+                      fontWeight: FontWeight.bold, color: AppColors.primary),
                 ),
               ),
               const SizedBox(width: 16),
@@ -160,13 +174,15 @@ class _NutritionChildrenListPageState extends ConsumerState<NutritionChildrenLis
                   children: [
                     Text(
                       child.name,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16),
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
                     Text(
                       '${child.ageLabel} • Resp: ${child.guardianName ?? "-"}',
-                      style: TextStyle(color: Colors.grey.shade600, fontSize: 13),
+                      style: TextStyle(
+                          color: Colors.grey.shade600, fontSize: 13),
                     ),
                   ],
                 ),
@@ -184,12 +200,13 @@ class _NutritionChildrenListPageState extends ConsumerState<NutritionChildrenLis
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.restaurant_menu_rounded, size: 64, color: Colors.grey.shade300),
+          Icon(Icons.restaurant_menu_rounded,
+              size: 64, color: Colors.grey.shade300),
           const SizedBox(height: 16),
           Text(
-             query.isEmpty 
-                 ? 'Nenhuma criança menor de 10 anos encontrada.' 
-                 : 'Nenhum resultado para "$query"',
+            query.isEmpty
+                ? 'Nenhuma criança menor de 10 anos encontrada.'
+                : 'Nenhum resultado para "$query"',
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.grey.shade600),
           ),
