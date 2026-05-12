@@ -11,7 +11,8 @@ import './profile/models/profile_model.dart';
 import './theme/app_colors.dart';
 import './enums/health_status.dart';
 import './nutrition/models/nutrition_record_model.dart';
-
+import './woman/models/woman_model.dart';
+import '../../utils/hive_keys.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
@@ -21,7 +22,8 @@ void main() async {
   Hive.registerAdapter(ProfileModelAdapter());          // TypeId: 2
   Hive.registerAdapter(VaccineRecordAdapter());         // TypeId: 3
   Hive.registerAdapter(CampaignVaccineModelAdapter());  // TypeId: 4
-  // TypeIds 5 e 6 estão livres (reservados para uso futuro)
+  Hive.registerAdapter(WomanModelAdapter());            // TypeId: 5
+  // TypeIds 6 estão livres 
   Hive.registerAdapter(FoodConsistencyAdapter());       // TypeId: 7
   // TypeIds 8, 9 estão livres
   Hive.registerAdapter(NutritionAnswerAdapter());       // TypeId: 10
@@ -29,6 +31,14 @@ void main() async {
   // TypeId 12 está livre
   Hive.registerAdapter(AgeCategoryAdapter());           // TypeId: 13
   Hive.registerAdapter(NutritionRecordModelAdapter());  // TypeId: 14
+
+  // ✅ Sugestão: Abrir as boxes principais aqui para evitar atrasos na UI
+  await Future.wait([
+    Hive.openBox<WomanModel>(HiveKeys.womanBox),
+    Hive.openBox<ChildModel>(HiveKeys.childrenBox),
+    Hive.openBox<ProfileModel>(HiveKeys.profileBox),
+    Hive.openBox<NutritionRecordModel>(HiveKeys.nutritionBox),
+  ]);
 
   runApp(
     const ProviderScope(

@@ -1,3 +1,5 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
 part of 'nutrition_record_model.dart';
 
 // **************************************************************************
@@ -15,54 +17,48 @@ class NutritionRecordModelAdapter extends TypeAdapter<NutritionRecordModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return NutritionRecordModel(
-      childKey:              fields[0]  as int,
-      assessmentDate:        fields[1]  as DateTime,
-      ageCategory:           fields[2]  as AgeCategory,
-      breastMilk:            fields[3]  as NutritionAnswer,
-      porridge:              fields[4]  as NutritionAnswer,
-      waterTeaJuice:         fields[5]  as NutritionAnswer,
-      cowMilk:               fields[6]  as NutritionAnswer,
-      infantFormula:         fields[7]  as NutritionAnswer,
-      fruitJuiceOrMashed:    fields[8]  as NutritionAnswer,
-      saltFood:              fields[9]  as NutritionAnswer,
-      otherFoodsOrDrinks:    fields[10] as NutritionAnswer,
-      fruit:                 fields[11] as NutritionAnswer,
-      fruitFrequency:        fields[12] as FoodFrequency,
-      saltFoodFrequency:     fields[13] as FoodFrequency,
-      saltFoodConsistency:   fields[14] as FoodConsistency,
-      otherMilk:             fields[15] as NutritionAnswer,
-      porridgeWithMilk:      fields[16] as NutritionAnswer,
-      yogurt:                fields[17] as NutritionAnswer,
-      vegetables:            fields[18] as NutritionAnswer,
+      childKey: fields[0] as int,
+      assessmentDate: fields[1] as DateTime,
+      ageCategory: fields[2] as AgeCategory,
+      breastMilk: fields[3] as NutritionAnswer,
+      porridge: fields[4] as NutritionAnswer,
+      waterTeaJuice: fields[5] as NutritionAnswer,
+      cowMilk: fields[6] as NutritionAnswer,
+      infantFormula: fields[7] as NutritionAnswer,
+      fruitJuiceOrMashed: fields[8] as NutritionAnswer,
+      saltFood: fields[9] as NutritionAnswer,
+      otherFoodsOrDrinks: fields[10] as NutritionAnswer,
+      fruitwhole: fields[34] as NutritionAnswer,
+      fruit: fields[11] as NutritionAnswer,
+      fruitFrequency: fields[12] as FoodFrequency,
+      saltFoodFrequency: fields[13] as FoodFrequency,
+      saltFoodConsistency: fields[14] as FoodConsistency,
+      otherMilk: fields[15] as NutritionAnswer,
+      porridgeWithMilk: fields[16] as NutritionAnswer,
+      yogurt: fields[17] as NutritionAnswer,
+      vegetables: fields[18] as NutritionAnswer,
       orangeVegetableOrFruit: fields[19] as NutritionAnswer,
-      darkGreenLeaves:       fields[20] as NutritionAnswer,
-      meatOrEgg:             fields[21] as NutritionAnswer,
-      liver:                 fields[22] as NutritionAnswer,
-      beans:                 fields[23] as NutritionAnswer,
-      carbs:                 fields[24] as NutritionAnswer,
-      processedMeats:        fields[25] as NutritionAnswer,
-      sweetenedBeverages:    fields[26] as NutritionAnswer,
-      snacksOrCookies:       fields[27] as NutritionAnswer,
-      sweets:                fields[28] as NutritionAnswer,
-      eatsWatchingTv:        fields[29] as NutritionAnswer,
-      dailyMeals:            (fields[30] as List).cast<String>(),
-      freshFruits:           fields[31] as NutritionAnswer,
-      vegetablesAndLegumes:  fields[32] as NutritionAnswer,
+      darkGreenLeaves: fields[20] as NutritionAnswer,
+      meatOrEgg: fields[21] as NutritionAnswer,
+      liver: fields[22] as NutritionAnswer,
+      beans: fields[23] as NutritionAnswer,
+      carbs: fields[24] as NutritionAnswer,
+      processedMeats: fields[25] as NutritionAnswer,
+      sweetenedBeverages: fields[26] as NutritionAnswer,
+      snacksOrCookies: fields[27] as NutritionAnswer,
+      sweets: fields[28] as NutritionAnswer,
+      eatsWatchingTv: fields[29] as NutritionAnswer,
+      dailyMeals: (fields[30] as List).cast<String>(),
+      freshFruits: fields[31] as NutritionAnswer,
+      vegetablesAndLegumes: fields[32] as NutritionAnswer,
       instantNoodlesOrSnacks: fields[33] as NutritionAnswer,
-      // CORREÇÃO: leitura null-safe do campo 34 (fruitwhole).
-      // Registros gravados antes desta correção não possuem o campo 34 no
-      // binário — fields[34] retorna null nesses casos. O operador ?? garante
-      // que o app não quebre ao abrir históricos antigos.
-      fruitwhole: fields[34] == null
-          ? NutritionAnswer.unanswered
-          : fields[34] as NutritionAnswer,
     );
   }
 
   @override
   void write(BinaryWriter writer, NutritionRecordModel obj) {
     writer
-      ..writeByte(35) // CORREÇÃO: era 34; agora 35 campos (0–34)
+      ..writeByte(35)
       ..writeByte(0)
       ..write(obj.childKey)
       ..writeByte(1)
@@ -131,7 +127,7 @@ class NutritionRecordModelAdapter extends TypeAdapter<NutritionRecordModel> {
       ..write(obj.vegetablesAndLegumes)
       ..writeByte(33)
       ..write(obj.instantNoodlesOrSnacks)
-      ..writeByte(34) // NOVO: fruitwhole
+      ..writeByte(34)
       ..write(obj.fruitwhole);
   }
 
@@ -162,7 +158,7 @@ class NutritionAnswerAdapter extends TypeAdapter<NutritionAnswer> {
       case 3:
         return NutritionAnswer.unanswered;
       default:
-        return NutritionAnswer.unanswered;
+        return NutritionAnswer.yes;
     }
   }
 
@@ -211,7 +207,7 @@ class FoodFrequencyAdapter extends TypeAdapter<FoodFrequency> {
       case 3:
         return FoodFrequency.unanswered;
       default:
-        return FoodFrequency.unanswered;
+        return FoodFrequency.once;
     }
   }
 
@@ -264,7 +260,7 @@ class FoodConsistencyAdapter extends TypeAdapter<FoodConsistency> {
       case 5:
         return FoodConsistency.unanswered;
       default:
-        return FoodConsistency.unanswered;
+        return FoodConsistency.pieces;
     }
   }
 

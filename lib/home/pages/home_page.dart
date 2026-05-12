@@ -5,7 +5,7 @@ import '../../theme/app_colors.dart';
 import '../../vaccines/views/child_list_page.dart';
 import '../../profile/pages/profile_page.dart';
 import '../../nutrition/views/nutrition_children_list_page.dart';
-// Importe seus caminhos corretos aqui
+import '../../woman/views/woman_list_page.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -148,16 +148,11 @@ class HomePage extends ConsumerWidget {
                     icon: Icons.face_3_rounded,
                     color: Colors.purple,
                     onTap: () {
-                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Módulo Anotações em breve!")),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const WomanListPage()),
                       );
                     },
-                    // onTap: () {
-                    //   Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(builder: (_) => const WomanListPage()),
-                    //   );
-                    // },
                   ),
                   _HomeModuleCard(
                     title: "Acompanhamento Nutricional",
