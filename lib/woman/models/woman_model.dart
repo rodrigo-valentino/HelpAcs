@@ -1,112 +1,96 @@
+// lib/woman/models/woman_model.dart
+
 import 'package:hive/hive.dart';
 import '../../utils/date_formatter.dart';
 import '../../enums/health_status.dart';
+import '../services/woman_status_service.dart';
 
 part 'woman_model.g.dart';
 
 @HiveType(typeId: 5)
 class WomanModel extends HiveObject {
-  int get id => key as int? ?? -1;
+  // ── Identificador ──────────────────────────────────────────────────────────
+
+  /// Chave Hive convertida para int.
+  ///
+  /// ⚠️ Acesso antes do primeiro [save]/[add] retorna -1 (estado inválido).
+  /// O assert em modo debug ajuda a detectar esse uso acidental.
+  int get id {
+    assert(
+      key != null,
+      'WomanModel.id foi acessado antes do objeto ser salvo na box. '
+      'Certifique-se de chamar box.add() antes de usar o id.',
+    );
+    return key as int? ?? -1;
+  }
+
+  // ── Campos persistidos ─────────────────────────────────────────────────────
 
   @HiveField(0)
   late String name;
 
   @HiveField(1)
   late DateTime birthDate;
-  
-  // --- DATAS DO PREVENTIVO ---
+
   @HiveField(2)
   DateTime? lastPreventivoDate;
 
   @HiveField(3)
-  DateTime? nextPreventivoDate; 
+  DateTime? nextPreventivoDate;
 
-  // --- DATAS DA MAMOGRAFIA ---
   @HiveField(4)
   DateTime? lastMammographyDate;
 
   @HiveField(5)
-  DateTime? nextMammographyDate; 
-  
+  DateTime? nextMammographyDate;
+
   @HiveField(6)
   String? notes;
 
+  // Nota de migration: campo adicionado após a versão inicial.
+  // Dados gravados antes deste campo existir serão lidos pelo adapter gerado
+  // como o valor padrão do Dart para bool (false), e NÃO como true.
+  // Se isso for um problema, considere migrar com: isSus ??= true no controller.
   @HiveField(7)
-  bool isSus = true; // true = SUS, false = Particular
+  bool isSus = true;
 
-  // --- LÓGICA DE NEGÓCIO ---
+  // ── Getters simples ────────────────────────────────────────────────────────
 
   int get age => DateFormatter.calculateAge(birthDate);
 
-  /// 🚦 Helper para Ordenação: Retorna o "peso" do status geral da paciente
-  /// 3 = Crítico (Overdue) - Aparece no topo
-  /// 2 = Atenção (Warning)
-  /// 1 = Em dia (UpToDate)
-  /// 0 = Outros (Pending, null)
-  int get generalStatusWeight {
-    final statuses = [preventivoStatus, mammographyStatus].whereType<HealthStatus>().toList();
-    
-    if (statuses.isEmpty) return 0;
-    if (statuses.contains(HealthStatus.overdue)) return 3;
-    if (statuses.contains(HealthStatus.warning)) return 2;
-    if (statuses.contains(HealthStatus.upToDate)) return 1;
-    
-    return 0; // Para pendentes
-  }
-  
-  /// Preventivo (25 a 64 anos)
-  HealthStatus? get preventivoStatus {
-    if (age < 25 || age > 64) return null; // Não aplicável
-    if (lastPreventivoDate == null) return HealthStatus.pending; // Nunca feito
-    
-    final targetDate = nextPreventivoDate ?? lastPreventivoDate!.add(const Duration(days: 365));
-    return _calculateStatus(targetDate);
-  }
+  // ── Delegação ao WomanStatusService ───────────────────────────────────────
+  //
+  // A lógica clínica (faixas etárias, períodos, cálculo de status) vive em
+  // WomanStatusService. O model apenas expõe os resultados para conveniência
+  // de uso nas widgets e no ListFilterService.
 
-  /// Mamografia (50 a 74 anos)
-  HealthStatus? get mammographyStatus {
-    if (age < 50 || age > 74) return null; // Não aplicável
-    if (lastMammographyDate == null) return HealthStatus.pending; // Nunca feito
+  /// Status do preventivo. `null` = fora da faixa etária (25–64 anos).
+  HealthStatus? get preventivoStatus =>
+      WomanStatusService.getPreventivoStatus(this);
 
-    final targetDate = nextMammographyDate ?? lastMammographyDate!.add(const Duration(days: 730));
-    return _calculateStatus(targetDate);
-  }
+  /// Status da mamografia. `null` = fora da faixa etária (50–74 anos).
+  HealthStatus? get mammographyStatus =>
+      WomanStatusService.getMammographyStatus(this);
 
-  HealthStatus _calculateStatus(DateTime nextDue) {
-    final today = DateTime.now();
-    final todayNorm = DateTime(today.year, today.month, today.day);
-    final dueNorm = DateTime(nextDue.year, nextDue.month, nextDue.day);
+  /// Status mais crítico para exibição no badge da lista.
+  /// `null` = nenhum exame aplicável para esta paciente.
+  HealthStatus? get badgeStatus => WomanStatusService.getBadgeStatus(this);
 
-    if (todayNorm.isAfter(dueNorm)) return HealthStatus.overdue;
-    
-    final diff = dueNorm.difference(todayNorm).inDays;
-    if (diff <= 30) return HealthStatus.warning;
+  /// Peso numérico para ordenação por prioridade (4 = mais crítico).
+  int get generalStatusWeight =>
+      WomanStatusService.getGeneralStatusWeight(this);
+}
 
-    return HealthStatus.upToDate;
-  }
+// ── Extensões ──────────────────────────────────────────────────────────────
 
-  /// 🎯 LÓGICA DO BADGE GLOBAL
-  /// 
-  /// Retorna o status mais crítico entre os exames aplicáveis, ou null se nenhum se aplica.
-  HealthStatus? get badgeStatus {
-    final applicableStatuses = [preventivoStatus, mammographyStatus].whereType<HealthStatus>().toList();
-
-    if (applicableStatuses.isEmpty) {
+extension WomanListExtensions on List<WomanModel> {
+  /// Busca uma paciente pelo id sem lançar exceção.
+  /// Retorna `null` se não encontrada.
+  WomanModel? lookup(int id) {
+    try {
+      return firstWhere((e) => e.id == id);
+    } catch (_) {
       return null;
     }
-
-    if (applicableStatuses.contains(HealthStatus.overdue)) {
-      return HealthStatus.overdue;
-    }
-
-    if (applicableStatuses.contains(HealthStatus.pending)) {
-      return HealthStatus.pending;
-    }
-
-    if (applicableStatuses.contains(HealthStatus.warning)) {
-      return HealthStatus.warning;
-    }
-
-    return HealthStatus.upToDate;
   }
 }

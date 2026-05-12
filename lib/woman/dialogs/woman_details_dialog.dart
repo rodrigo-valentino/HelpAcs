@@ -1,3 +1,5 @@
+// lib/woman/dialogs/woman_details_dialog.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -7,10 +9,10 @@ import '../../widgets/base_dialog.dart';
 
 import '../models/woman_model.dart';
 import '../providers/woman_controller.dart';
+import '../services/woman_status_service.dart';
 import 'update_exam_dialog.dart';
-import 'woman_form_dialog.dart'; // ✅ Import necessário para o botão de editar
+import 'woman_form_dialog.dart';
 
-// Imports do novo padrão de Badge e Status
 import '../../enums/health_status.dart';
 import '../../services/health_status_badge.dart';
 
@@ -21,7 +23,7 @@ class WomanDetailsDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Escuta o provider para garantir que a UI atualize após a edição
+    // Escuta o provider para que a UI atualize após edições sem fechar o dialog.
     final asyncWomen = ref.watch(womanListControllerProvider);
     final currentWoman = asyncWomen.value?.lookup(woman.id) ?? woman;
 
@@ -29,46 +31,42 @@ class WomanDetailsDialog extends ConsumerWidget {
       title: currentWoman.name,
       icon: Icons.face_3,
       iconColor: Colors.purple,
-      cancelButtonText: 'Fechar', 
+      cancelButtonText: 'Fechar',
       onCancel: () => Navigator.pop(context),
-      
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // ✅ Cabeçalho principal com botão de editar
           _buildMainHeader(context, currentWoman),
-          
           const SizedBox(height: 24),
-
           _ExamCard(
-            title: "Preventivo",
-            subtitle: "Periodicidade: Anual (25-64 anos)",
+            title: 'Preventivo',
+            subtitle:
+                'Periodicidade: Anual · Faixa: ${WomanStatusService.preventivoMinAge}–${WomanStatusService.preventivoMaxAge} anos',
             status: currentWoman.preventivoStatus,
             lastDate: currentWoman.lastPreventivoDate,
             nextDate: currentWoman.nextPreventivoDate,
             onUpdate: () => _showExamUpdateDialog(
-              context, 
+              context,
               ref,
-              currentWoman, 
-              isPreventivo: true
+              currentWoman,
+              isPreventivo: true,
             ),
           ),
-
           const SizedBox(height: 16),
           const Divider(),
           const SizedBox(height: 16),
-
           _ExamCard(
-            title: "Mamografia",
-            subtitle: "Periodicidade: Bienal (50-74 anos)",
+            title: 'Mamografia',
+            subtitle:
+                'Periodicidade: Bienal · Faixa: ${WomanStatusService.mammographyMinAge}–${WomanStatusService.mammographyMaxAge} anos',
             status: currentWoman.mammographyStatus,
             lastDate: currentWoman.lastMammographyDate,
             nextDate: currentWoman.nextMammographyDate,
             onUpdate: () => _showExamUpdateDialog(
               context,
               ref,
-              currentWoman, 
-              isPreventivo: false
+              currentWoman,
+              isPreventivo: false,
             ),
           ),
         ],
@@ -76,14 +74,13 @@ class WomanDetailsDialog extends ConsumerWidget {
     );
   }
 
-  // --- 🛠️ CABEÇALHO PRINCIPAL ARRUMADO ---
   Widget _buildMainHeader(BuildContext context, WomanModel woman) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Row(
           children: [
-            // 1. Idade
+            // Idade
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
@@ -91,28 +88,32 @@ class WomanDetailsDialog extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                "${woman.age} anos",
+                '${woman.age} anos',
                 style: const TextStyle(
-                  fontSize: 14, 
-                  color: Colors.purple, 
-                  fontWeight: FontWeight.w700
+                  fontSize: 14,
+                  color: Colors.purple,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ),
             const SizedBox(width: 8),
-            
-            // 2. Tag SUS / Particular
+
+            // Tag SUS / Particular
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
-                color: woman.isSus ? AppColors.infoSurface : AppColors.successSurface,
+                color: woman.isSus
+                    ? AppColors.infoSurface
+                    : AppColors.successSurface,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: woman.isSus ? AppColors.infoBorder : AppColors.successBorder,
+                  color: woman.isSus
+                      ? AppColors.infoBorder
+                      : AppColors.successBorder,
                 ),
               ),
               child: Text(
-                woman.isSus ? "SUS" : "Particular",
+                woman.isSus ? 'SUS' : 'Particular',
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
@@ -123,17 +124,18 @@ class WomanDetailsDialog extends ConsumerWidget {
 
             const Spacer(),
 
-            // ✅ 3. BOTÃO DE EDITAR (Para Notas e isSus)
+            // Botão editar dados cadastrais
             IconButton(
               onPressed: () {
                 showDialog(
                   context: context,
+                  // Passa currentWoman (reativo) — não o woman original do construtor.
                   builder: (_) => WomanFormDialog(woman: woman),
                 );
               },
               icon: const Icon(Icons.edit_outlined, size: 22),
               color: Colors.purple,
-              tooltip: "Editar dados da paciente",
+              tooltip: 'Editar dados da paciente',
               style: IconButton.styleFrom(
                 backgroundColor: Colors.purple.withAlpha(15),
               ),
@@ -141,7 +143,7 @@ class WomanDetailsDialog extends ConsumerWidget {
           ],
         ),
 
-        // 4. Observações em baixo
+        // Observações
         if (woman.notes != null && woman.notes!.trim().isNotEmpty) ...[
           const SizedBox(height: 12),
           Container(
@@ -159,7 +161,7 @@ class WomanDetailsDialog extends ConsumerWidget {
                     Icon(Icons.notes, size: 16, color: Colors.grey.shade700),
                     const SizedBox(width: 6),
                     Text(
-                      "Observações",
+                      'Observações',
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.bold,
@@ -180,7 +182,7 @@ class WomanDetailsDialog extends ConsumerWidget {
                 ),
               ],
             ),
-          )
+          ),
         ],
       ],
     );
@@ -202,11 +204,12 @@ class WomanDetailsDialog extends ConsumerWidget {
   }
 }
 
-// --- 📋 CARD DE EXAME ---
+// ── Card de Exame ──────────────────────────────────────────────────────────
+
 class _ExamCard extends StatelessWidget {
   final String title;
   final String subtitle;
-  final HealthStatus? status; 
+  final HealthStatus? status;
   final DateTime? lastDate;
   final DateTime? nextDate;
   final VoidCallback onUpdate;
@@ -222,15 +225,12 @@ class _ExamCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color bgColor = _getBackgroundColor();
-    final Color borderColor = _getBorderColor();
-
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: bgColor,
+        color: _backgroundColor,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: borderColor),
+        border: Border.all(color: _borderColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -243,7 +243,6 @@ class _ExamCard extends StatelessWidget {
     );
   }
 
-  // ✅ Aqui está o widget que você enviou, integrado ao Card
   Widget _buildExamHeader() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -254,42 +253,48 @@ class _ExamCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                title, 
+                title,
                 style: const TextStyle(
-                  fontWeight: FontWeight.bold, 
-                  fontSize: 16, 
-                  color: AppColors.textPrimary
-                )
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: AppColors.textPrimary,
+                ),
               ),
               const SizedBox(height: 2),
               Text(
-                subtitle, 
-                style: TextStyle(fontSize: 12, color: Colors.grey.shade600)
+                subtitle,
+                style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
               ),
             ],
           ),
         ),
         const SizedBox(width: 8),
-        status == null 
-          ? _buildNotApplicableBadge()
-          : HealthStatusBadge(status: status!, fontSize: 11),
+        status == null
+            ? _buildNotApplicableBadge()
+            : HealthStatusBadge(status: status!, fontSize: 11),
       ],
     );
   }
 
+  /// Badge exibido quando a paciente está fora da faixa etária do exame.
+  /// O tooltip explica o motivo para o agente de saúde, evitando confusão
+  /// quando a paciente transita de uma faixa para outra.
   Widget _buildNotApplicableBadge() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade200,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        "N/A",
-        style: TextStyle(
-          color: Colors.grey.shade600,
-          fontSize: 11,
-          fontWeight: FontWeight.bold,
+    return Tooltip(
+      message: 'Paciente fora da faixa etária para este exame',
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade200,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          'Fora da faixa',
+          style: TextStyle(
+            color: Colors.grey.shade600,
+            fontSize: 11,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
@@ -298,23 +303,20 @@ class _ExamCard extends StatelessWidget {
   Widget _buildDates() {
     return Row(
       children: [
-        Expanded(
-          child: _DateInfo(label: "Último:", date: lastDate),
-        ),
+        Expanded(child: _DateInfo(label: 'Último:', date: lastDate)),
         Container(
-          width: 1, 
-          height: 30, 
+          width: 1,
+          height: 30,
           color: Colors.grey.shade300,
           margin: const EdgeInsets.symmetric(horizontal: 12),
         ),
         Expanded(
-          child: _DateInfo(label: "Próximo:", date: nextDate, isBold: true),
-        ),
+            child: _DateInfo(label: 'Próximo:', date: nextDate, isBold: true)),
         IconButton(
           onPressed: onUpdate,
           icon: const Icon(Icons.edit_calendar),
           color: Colors.purple,
-          tooltip: "Atualizar data",
+          tooltip: 'Atualizar data',
           style: IconButton.styleFrom(
             backgroundColor: Colors.white,
             side: BorderSide(color: Colors.grey.shade300),
@@ -324,34 +326,39 @@ class _ExamCard extends StatelessWidget {
     );
   }
 
-  Color _getBackgroundColor() {
+  Color get _backgroundColor {
     switch (status) {
       case HealthStatus.upToDate: return AppColors.successSurface;
-      case HealthStatus.warning: return AppColors.warningSurface;
-      case HealthStatus.overdue: return AppColors.errorSurface;
-      case HealthStatus.pending: return AppColors.surface;
-      case null: return Colors.grey.shade50;
+      case HealthStatus.warning:  return AppColors.warningSurface;
+      case HealthStatus.overdue:  return AppColors.errorSurface;
+      case HealthStatus.pending:  return AppColors.surface;
+      case null:                  return Colors.grey.shade50;
     }
   }
 
-  Color _getBorderColor() {
+  Color get _borderColor {
     switch (status) {
       case HealthStatus.upToDate: return AppColors.successBorder;
-      case HealthStatus.warning: return AppColors.warningBorder;
-      case HealthStatus.overdue: return AppColors.errorBorder;
-      case HealthStatus.pending: return AppColors.border;
-      case null: return Colors.grey.shade200;
+      case HealthStatus.warning:  return AppColors.warningBorder;
+      case HealthStatus.overdue:  return AppColors.errorBorder;
+      case HealthStatus.pending:  return AppColors.border;
+      case null:                  return Colors.grey.shade200;
     }
   }
 }
 
-// Widget reutilizável para exibição de data
+// ── Widget auxiliar de data ────────────────────────────────────────────────
+
 class _DateInfo extends StatelessWidget {
   final String label;
   final DateTime? date;
   final bool isBold;
 
-  const _DateInfo({required this.label, required this.date, this.isBold = false});
+  const _DateInfo({
+    required this.label,
+    required this.date,
+    this.isBold = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -361,24 +368,15 @@ class _DateInfo extends StatelessWidget {
         Text(label, style: const TextStyle(fontSize: 11, color: Colors.grey)),
         const SizedBox(height: 2),
         Text(
-          date != null ? DateFormatter.format(date!) : "--/--/----", 
+          date != null ? DateFormatter.format(date!) : '--/--/----',
           style: TextStyle(
             fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
-            color: date != null ? AppColors.textPrimary : Colors.grey.shade400,
-            fontSize: 14
+            color:
+                date != null ? AppColors.textPrimary : Colors.grey.shade400,
+            fontSize: 14,
           ),
         ),
       ],
     );
-  }
-}
-
-extension ListLookup on List<WomanModel> {
-  WomanModel? lookup(int id) {
-    try {
-      return firstWhere((e) => e.id == id);
-    } catch (_) {
-      return null;
-    }
   }
 }
