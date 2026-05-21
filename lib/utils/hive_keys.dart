@@ -5,4 +5,5 @@ abstract class HiveKeys {
   static const String adminProfile = 'adminProfile';
   static const String nutritionBox = 'nutritionBox';
   static const String womanBox = 'womanBox'; 
+  static const String pregnantBox = 'pregnantBox';
 }

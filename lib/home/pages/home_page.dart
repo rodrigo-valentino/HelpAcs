@@ -6,6 +6,7 @@ import '../../vaccines/views/child_list_page.dart';
 import '../../profile/pages/profile_page.dart';
 import '../../nutrition/views/nutrition_children_list_page.dart';
 import '../../woman/views/woman_list_page.dart';
+import '../../pregnant/views/pregnant_list_page.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -131,16 +132,11 @@ class HomePage extends ConsumerWidget {
                     icon: Icons.pregnant_woman_rounded,
                     color: Colors.pink,
                     onTap: () {
-                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Módulo Anotações em breve!")),
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const PregnantListPage()),
                       );
                     },
-                    // onTap: () {
-                    //   Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(builder: (_) => const PregnantListPage()),
-                    //   );
-                    // },
                   ),
                   _HomeModuleCard(
                     title: "Saúde da Mulher",

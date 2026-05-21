@@ -14,6 +14,7 @@ import '../dialogs/woman_details_dialog.dart';
 
 // ✅ Imports do novo padrão de Badge
 import '../../services/health_status_badge.dart';
+import '../components/woman_dashboard.dart';
 
 class WomanListPage extends ConsumerStatefulWidget {
   const WomanListPage({super.key});
@@ -160,6 +161,7 @@ class _WomanListPageState extends ConsumerState<WomanListPage> {
       body: Column(
         children: [
           _buildSearchBar(),
+          const WomanDashboard(),
           Expanded(
             child: asyncWomen.when(
               loading: () => const Center(child: CircularProgressIndicator()),

@@ -1,9 +1,11 @@
-import 'package:helpacs/home/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'package:helpacs/home/pages/home_page.dart';
+
+// Módulos Anteriores
 import './vaccines/models/child_model.dart';
 import './vaccines/models/vaccine_record_model.dart';
 import './vaccines/models/campaign_vaccine_model.dart';
@@ -13,10 +15,20 @@ import './enums/health_status.dart';
 import './nutrition/models/nutrition_record_model.dart';
 import './woman/models/woman_model.dart';
 import '../../utils/hive_keys.dart';
+
+// ✅ NOVOS IMPORTS: Módulo Gestantes
+import './pregnant/models/pregnant_woman_model.dart';
+import './pregnant/models/prenatal_consultation_model.dart';
+import './pregnant/models/ultrasound_exam_model.dart';
+import './pregnant/models/lab_exam_model.dart';
+import './pregnant/models/prenatal_vaccine_model.dart';
+import './pregnant/enums/pregnancy_enums.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
 
+  // ─── ADAPTADORES EXISTENTES ──────────────────────────────────────────
   Hive.registerAdapter(HealthStatusAdapter());          // TypeId: 0
   Hive.registerAdapter(ChildModelAdapter());            // TypeId: 1
   Hive.registerAdapter(ProfileModelAdapter());          // TypeId: 2
@@ -32,12 +44,25 @@ void main() async {
   Hive.registerAdapter(AgeCategoryAdapter());           // TypeId: 13
   Hive.registerAdapter(NutritionRecordModelAdapter());  // TypeId: 14
 
-  // ✅ Sugestão: Abrir as boxes principais aqui para evitar atrasos na UI
+  // ─── ✅ NOVOS ADAPTADORES (Módulo Gestantes) ───────────────────────
+  Hive.registerAdapter(PregnantWomanModelAdapter());        // TypeId: 15
+  Hive.registerAdapter(PrenatalConsultationModelAdapter()); // TypeId: 16
+  Hive.registerAdapter(UltrasoundExamModelAdapter());       // TypeId: 17
+  Hive.registerAdapter(LabExamModelAdapter());              // TypeId: 18
+  Hive.registerAdapter(PrenatalVaccineModelAdapter());      // TypeId: 19
+  Hive.registerAdapter(PregnancyRiskAdapter());             // TypeId: 20
+  Hive.registerAdapter(ConsultationTypeAdapter());          // TypeId: 21
+  Hive.registerAdapter(UltrasoundTypeAdapter());            // TypeId: 22
+  Hive.registerAdapter(LabExamTypeAdapter());               // TypeId: 23
+  Hive.registerAdapter(PrenatalVaccineTypeAdapter());       // TypeId: 24
+
+  // Abrir as boxes principais para evitar atrasos na UI
   await Future.wait([
     Hive.openBox<WomanModel>(HiveKeys.womanBox),
     Hive.openBox<ChildModel>(HiveKeys.childrenBox),
     Hive.openBox<ProfileModel>(HiveKeys.profileBox),
     Hive.openBox<NutritionRecordModel>(HiveKeys.nutritionBox),
+    Hive.openBox<PregnantWomanModel>(HiveKeys.pregnantBox),
   ]);
 
   runApp(
