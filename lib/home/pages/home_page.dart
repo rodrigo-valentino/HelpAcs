@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../profile/controllers/profile_controller.dart';
 import '../../theme/app_colors.dart';
 import '../../vaccines/views/child_list_page.dart';
@@ -8,15 +9,17 @@ import '../../nutrition/views/nutrition_children_list_page.dart';
 import '../../woman/views/woman_list_page.dart';
 import '../../pregnant/views/pregnant_list_page.dart';
 
+// ✅ Novo import da página do calendário
+import '../../calendar/views/calendar_page.dart'; 
+import '../../notes/views/task_page.dart';
+
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 1. Escuta o ProfileController para pegar o nome atualizado do Hive
     final asyncProfile = ref.watch(profileControllerProvider);
 
-    // Obtém a hora atual para dar Bom dia/tarde/noite
     final hour = DateTime.now().hour;
     String greeting = 'Bom dia';
     if (hour >= 12) greeting = 'Boa tarde';
@@ -47,7 +50,7 @@ class HomePage extends ConsumerWidget {
                       ),
                       asyncProfile.when(
                         data: (profile) => Text(
-                          profile.name, // ✅ Nome vindo agora do Hive via Riverpod
+                          profile.name, 
                           style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -66,10 +69,8 @@ class HomePage extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  // Avatar ou Ícone de Perfil
                   InkWell(
                     onTap: () {
-                      // Navega para a tela de Perfil
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (_) => const ProfilePage()),
@@ -105,14 +106,13 @@ class HomePage extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
 
-              // Grid de Cards
               GridView.count(
-                shrinkWrap: true, // Importante dentro de Column
+                shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 crossAxisCount: 2,
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
-                childAspectRatio: 1.1, // Ajuste a proporção Largura/Altura
+                childAspectRatio: 1.1, 
                 children: [
                   _HomeModuleCard(
                     title: "Acompanhamento Vacinal",
@@ -168,8 +168,9 @@ class HomePage extends ConsumerWidget {
                     icon: Icons.edit_note_rounded,
                     color: Colors.teal,
                     onTap: () {
-                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Módulo Anotações em breve!")),
+                        Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const TasksPage()),
                       );
                     },
                   ),
@@ -179,65 +180,79 @@ class HomePage extends ConsumerWidget {
               const SizedBox(height: 32),
 
               // 3. ATALHO RÁPIDO / CARD DE DESTAQUE
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppColors.primary,
-                      AppColors.primary.withAlpha(200),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    // ✅ Navega para o calendário em tela cheia
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const MuralPage()),
+                    );
+                  },
                   borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.primary.withAlpha(50),
-                      blurRadius: 10,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withAlpha(50),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: const Icon(Icons.calendar_month_rounded, color: Colors.white, size: 28),
-                    ),
-                    const SizedBox(width: 16),
-                    const Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Calendário Nacional",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 4),
-                          Text(
-                            "Calendário",
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 12,
-                            ),
-                          ),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          AppColors.primary,
+                          AppColors.primary.withAlpha(200),
                         ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primary.withAlpha(50),
+                          blurRadius: 10,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
                     ),
-                    const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
-                  ],
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withAlpha(50),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(Icons.calendar_month_rounded, color: Colors.white, size: 28),
+                        ),
+                        const SizedBox(width: 16),
+                        const Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Calendário Nacional",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                "Acessar visualização mensal",
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Icon(Icons.arrow_forward_ios, color: Colors.white, size: 16),
+                      ],
+                    ),
+                  ),
                 ),
               ),
+              const SizedBox(height: 16),
             ],
           ),
         ),
@@ -267,7 +282,7 @@ class _HomeModuleCard extends StatelessWidget {
     return Material(
       color: Colors.white,
       borderRadius: BorderRadius.circular(20),
-      elevation: 2, // Sombra suave
+      elevation: 2, 
       shadowColor: Colors.black.withAlpha(25),
       child: InkWell(
         onTap: onTap,
@@ -278,7 +293,6 @@ class _HomeModuleCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Ícone com fundo colorido
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
@@ -287,17 +301,15 @@ class _HomeModuleCard extends StatelessWidget {
                 ),
                 child: Icon(icon, color: color, size: 28),
               ),
-              
-              // Textos
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     title,
-                    maxLines: 2, // Proteção contra quebra de texto
+                    maxLines: 2, 
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      fontSize: 15, // Leve ajuste para caber melhor
+                      fontSize: 15, 
                       fontWeight: FontWeight.bold,
                       color: Colors.black87,
                     ),

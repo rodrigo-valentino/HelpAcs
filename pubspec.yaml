@@ -67,7 +67,9 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
+  # Declaração correta dos assets do projeto para uso no Image.asset
+  assets:
+    - assets/images/logo_foreground.png
 
 flutter_launcher_icons:
   android: true
@@ -75,12 +77,9 @@ flutter_launcher_icons:
   image_path: "assets/images/logo_foreground.png"
   adaptive_icon_background: "#A9CCE3"
   adaptive_icon_foreground: "assets/images/logo_foreground.png"
-  assets:
-    - assets/images/logo_foreground.png
 
 flutter_native_splash:
   color: "#A9CCE3"
-
   image: assets/images/logo_foreground.png
 
   android: true

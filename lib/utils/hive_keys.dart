@@ -6,4 +6,6 @@ abstract class HiveKeys {
   static const String nutritionBox = 'nutritionBox';
   static const String womanBox = 'womanBox'; 
   static const String pregnantBox = 'pregnantBox';
+  static const String noticeBox = 'noticeBox';
+  static const String taskBox = 'taskBox';
 }
