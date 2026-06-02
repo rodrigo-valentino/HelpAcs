@@ -96,8 +96,11 @@ class _ChildListPageState extends ConsumerState<ChildListPage> {
             ImportButton(
               type: ImportPatientType.child,
               onImportRow: (row) async {
-                // ✅ Inserção no Hive através do Controller
-                await ref.read(childListControllerProvider.notifier).addChild(
+                // Usa importChild (em vez de addChild) para garantir que
+                // registros duplicados sejam detectados e rejeitados antes
+                // de serem inseridos no banco — o ImportPreviewDialog captura
+                // a exceção e exibe o motivo na lista de falhas.
+                await ref.read(childListControllerProvider.notifier).importChild(
                   ChildModel(
                     name: row.name,
                     birthDate: row.birthDate,

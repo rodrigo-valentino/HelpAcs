@@ -147,7 +147,7 @@ class _ChildFormDialogState extends ConsumerState<ChildFormDialog> {
                   final date = await showCupertinoDatePickerModal(
                     context: context,
                     initialDate: _birthDate ?? DateTime.now(), 
-                    firstDate: DateTime(2000), 
+                    firstDate: DateTime(1900), 
                     lastDate: DateTime.now(), 
                     title: "Data de Nascimento",
                   );

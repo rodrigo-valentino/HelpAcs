@@ -62,6 +62,56 @@ class ChildListController extends AsyncNotifier<List<ChildModel>> {
     state = AsyncValue.data(box.values.toList());
   }
 
+  Future<void> importChild(ChildModel child) async {
+    final box = Hive.box<ChildModel>(HiveKeys.childrenBox);
+    final existing = box.values.toList();
+
+    // Normaliza o CPF: remove pontos, traços e espaços para comparação robusta
+    final String? incomingCpf = _normalizeCpf(child.cpf);
+
+    for (final record in existing) {
+      final String? recordCpf = _normalizeCpf(record.cpf);
+
+      // Regra 1 — CPF único: se ambos têm CPF e são iguais → duplicata certa
+      if (incomingCpf != null && incomingCpf.isNotEmpty &&
+          recordCpf != null && recordCpf.isNotEmpty &&
+          incomingCpf == recordCpf) {
+        throw Exception(
+          'já existe um paciente com o CPF ${child.cpf} cadastrado.',
+        );
+      }
+
+      if ((incomingCpf == null || incomingCpf.isEmpty) &&
+          (recordCpf == null || recordCpf.isEmpty)) {
+        final sameDate = _sameDate(child.birthDate, record.birthDate);
+        final sameName = child.name.trim().toLowerCase() ==
+            record.name.trim().toLowerCase();
+
+        if (sameName && sameDate) {
+          throw Exception(
+            'já existe um paciente com o nome "${record.name}" '
+            'e a mesma data de nascimento.',
+          );
+        }
+      }
+    }
+
+    // Nenhuma duplicata encontrada — insere normalmente
+    await box.add(child);
+    state = AsyncValue.data(box.values.toList());
+  }
+
+  /// Remove formatação do CPF para comparação normalizada.
+  static String? _normalizeCpf(String? cpf) {
+    if (cpf == null) return null;
+    return cpf.replaceAll(RegExp(r'[\s.\-/]'), '').trim();
+  }
+
+  /// Compara apenas a parte da data (dia/mês/ano), ignorando horário.
+  static bool _sameDate(DateTime a, DateTime b) {
+    return a.year == b.year && a.month == b.month && a.day == b.day;
+  }
+
   // Método para deletar pacientes selecionados
   Future<void> deleteChildren(List<dynamic> keys) async {
     final box = Hive.box<ChildModel>(HiveKeys.childrenBox);
@@ -72,7 +122,7 @@ class ChildListController extends AsyncNotifier<List<ChildModel>> {
   }
   
   Future<void> updateChild({
-    required dynamic key, // O Hive usa 'key' em vez de 'id'
+    required dynamic key,
     required String name,
     required DateTime birthDate,
     String? guardian,
