@@ -510,8 +510,8 @@ class _CampaignTemplateCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final dueDate = DateTime(birthDate.year, birthDate.month + template.ageMonths, birthDate.day);
-    final now = DateTime.now();
+    final dueDate = DateTime(birthDate.year, birthDate.month + template.totalMonths, birthDate.day,);
+    final now = DateTime.now(); 
     final today = DateTime(now.year, now.month, now.day);
     final isFuture = dueDate.isAfter(today);
     final isApplied = record?.applied ?? false;
@@ -531,7 +531,7 @@ class _CampaignTemplateCard extends ConsumerWidget {
                   ref.read(campaignControllerProvider).toggleTemplateVaccine(
                         childKey: childKey,
                         name: template.name,
-                        ageMonths: template.ageMonths,
+                        ageMonths: template.totalMonths,
                       );
                 },
           child: Container(
@@ -552,7 +552,9 @@ class _CampaignTemplateCard extends ConsumerWidget {
           ),
         ),
         subtitle: Text(
-          'A partir de ${template.ageMonths} meses • ${DateFormatter.format(dueDate)}',
+          '${template.ageYears != null
+              ? 'A partir de ${template.ageYears} anos'
+              : 'A partir de ${template.ageMonths} meses'} • ${DateFormatter.format(dueDate)}',
           style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
         ),
       ),
@@ -660,10 +662,8 @@ class _VaccineCardWidget extends ConsumerWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('$doseNumberª dose', style: TextStyle(color: Colors.grey.shade600, fontSize: 12)),
-            const SizedBox(height: 2),
             Text(
-              'Vencimento: ${DateFormatter.format(dueDate)}',
+              'Aprazamento: ${DateFormatter.format(dueDate)}',
               style: TextStyle(
                 color: (diffDays < 0 && !isApplied) ? Colors.red : Colors.grey.shade600,
                 fontSize: 12,

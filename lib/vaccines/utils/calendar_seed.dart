@@ -34,7 +34,7 @@ class CalendarSeed {
       ('2 meses', 2, AgeUnit.months, [
         ('Penta (DTP+Hib+HepB)', 1),
         ('VIP (Pólio Inativada)', 1),
-        ('Pneumocócica 10v', 1),
+        ('Pneumocócica 20v', 1),
         ('Rotavírus', 1),
       ]),
       ('3 meses', 3, AgeUnit.months, [
@@ -43,7 +43,7 @@ class CalendarSeed {
       ('4 meses', 4, AgeUnit.months, [
         ('Penta (DTP+Hib+HepB)', 1),
         ('VIP (Pólio Inativada)', 1),
-        ('Pneumocócica 10v', 1),
+        ('Pneumocócica 20v', 1),
         ('Rotavírus', 1),
       ]),
       ('5 meses', 5, AgeUnit.months, [
@@ -52,33 +52,36 @@ class CalendarSeed {
       ('6 meses', 6, AgeUnit.months, [
         ('Penta (DTP+Hib+HepB)', 1),
         ('VIP (Pólio Inativada)', 1),
-        ('Influenza Trivalente', 1),
-      ]),
-      ('7 meses', 7, AgeUnit.months, [
-        ('Influenza Trivalente', 1),
       ]),
       ('9 meses', 9, AgeUnit.months, [
         ('Febre Amarela', 1),
       ]),
       ('12 meses', 12, AgeUnit.months, [
         ('Tríplice Viral (SCR)', 1),
-        ('Pneumocócica 10v', 1),
-        ('Meningocócica C', 1),
+        ('Meningocócica ACWY', 1),
+        ('Pneumo 20v (1° Reforço)', 1),
       ]),
       ('15 meses', 15, AgeUnit.months, [
-        ('Tetraviral (SCRV)', 1),
         ('Hepatite A', 1),
-        ('DTP (Tríplice Bacteriana)', 1),
-        ('VIP (Pólio Inativada)', 1),
+        ('Varicela', 1),
+        ('Triviral SCR (1° Reforço)', 1),
+        ('DTP (1° Reforço)', 1),
+        ('VIP (1° Reforço)', 1),
       ]),
       ('4 anos', 4, AgeUnit.years, [
-        ('DTP (Tríplice Bacteriana)', 1),
-        ('VIP (Pólio Inativada)', 1),
         ('Varicela', 1),
         ('Febre Amarela', 1),
+        ('DTP (2° Reforço)', 1),
+        ('VIP (2° Reforço)', 1),        
       ]),
-      ('11 a 14 anos', 11, AgeUnit.years, [
+      ('9 a 14 anos', 9, AgeUnit.years, [
         ('HPV', 1),
+      ]),
+      ('11 anos', 11, AgeUnit.years, [
+        ('Meningocócica ACWY', 1),
+      ]),
+      ('14 anos', 14, AgeUnit.years, [ 
+        ('dT (Dupla Adulto)', 1), 
       ]),
     ];
 

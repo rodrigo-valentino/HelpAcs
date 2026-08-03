@@ -10,12 +10,16 @@
 /// usado no calendário oficial.
 class CampaignVaccineTemplate {
   final String name;
+  final int? ageMonths;
+  final int? ageYears;
 
-  /// Idade da criança, em meses, a partir da qual esta vacina de campanha
-  /// fica disponível para ser marcada.
-  final int ageMonths;
+  const CampaignVaccineTemplate({
+    required this.name,
+    this.ageMonths,
+    this.ageYears,
+  });
 
-  const CampaignVaccineTemplate({required this.name, required this.ageMonths});
+  int get totalMonths => ageMonths ?? (ageYears! * 12);
 }
 
 const List<CampaignVaccineTemplate> campaignVaccineTemplates = [
@@ -23,4 +27,7 @@ const List<CampaignVaccineTemplate> campaignVaccineTemplates = [
   CampaignVaccineTemplate(name: 'Influenza (Gripe)', ageMonths: 7),
   CampaignVaccineTemplate(name: 'COVID-19', ageMonths: 6),
   CampaignVaccineTemplate(name: 'COVID-19', ageMonths: 7),
+
+  CampaignVaccineTemplate(name: 'DENGUE 1ª DOSE', ageYears: 10),
+  CampaignVaccineTemplate(name: 'DENGUE 2ª DOSE', ageYears: 10),
 ];
