@@ -23,13 +23,15 @@ class VaccineRecordAdapter extends TypeAdapter<VaccineRecord> {
       isCustom: fields[3] as bool,
       observation: fields[4] as String?,
       group: fields[5] as String,
+      vaccineDefinitionKey: fields[6] as int?,
+      groupKey: fields[7] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, VaccineRecord obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -41,7 +43,11 @@ class VaccineRecordAdapter extends TypeAdapter<VaccineRecord> {
       ..writeByte(4)
       ..write(obj.observation)
       ..writeByte(5)
-      ..write(obj.group);
+      ..write(obj.group)
+      ..writeByte(6)
+      ..write(obj.vaccineDefinitionKey)
+      ..writeByte(7)
+      ..write(obj.groupKey);
   }
 
   @override

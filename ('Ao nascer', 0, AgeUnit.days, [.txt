@@ -1,0 +1,75 @@
+('Ao nascer', 0, AgeUnit.days, [
+  ('BCG', 1),
+  ('Hepatite B', 1),
+]),
+
+('2 meses', 2, AgeUnit.months, [
+  ('Penta (DTP+Hib+HepB)', 1),
+  ('VIP (Pólio Inativada)', 1),
+  ('Pneumocócica 20v', 1),
+  ('Rotavírus', 1),
+]),
+
+('3 meses', 3, AgeUnit.months, [
+  ('Meningocócica C', 1),
+]),
+
+('4 meses', 4, AgeUnit.months, [
+  ('Penta (DTP+Hib+HepB)', 2),
+  ('VIP (Pólio Inativada)', 2),
+  ('Pneumocócica 20v', 2),
+  ('Rotavírus', 2),
+]),
+
+('5 meses', 5, AgeUnit.months, [
+  ('Meningocócica C', 2),
+]),
+
+('6 meses', 6, AgeUnit.months, [
+  ('Penta (DTP+Hib+HepB)', 3),
+  ('VIP (Pólio Inativada)', 3),
+]),
+
+('9 meses', 9, AgeUnit.months, [
+  ('Febre Amarela', 1),
+]),
+
+('12 meses', 12, AgeUnit.months, [
+  ('Tríplice Viral (SCR)', 1),
+  ('Pneumocócica 20v', 3), // Reforço
+  ('Meningocócica ACWY', 1),
+]),
+
+('15 meses', 15, AgeUnit.months, [
+  ('DTP (Tríplice Bacteriana)', 1), // 1º reforço
+  ('VIP (Pólio Inativada)', 4),     // 1º reforço
+  ('Hepatite A', 1),
+  ('Tetraviral (SCRV)', 1),
+]),
+
+('4 anos', 4, AgeUnit.years, [
+  ('DTP (Tríplice Bacteriana)', 2), // 2º reforço
+  ('VIP (Pólio Inativada)', 5),     // 2º reforço
+  ('Varicela', 2),
+  ('Febre Amarela', 2),
+]),
+
+('9 anos', 9, AgeUnit.years, [
+  ('HPV', 1),
+]),
+
+('10 anos', 10, AgeUnit.years, [
+  ('Dengue', 1),
+]),
+
+('11 anos', 11, AgeUnit.years, [
+  ('Meningocócica ACWY', 1),
+]),
+
+('14 anos', 14, AgeUnit.years, [
+  ('dT (Dupla Adulto)', 1),
+]),
+
+adicionar um campo como isBooster ou displayName ("1º Reforço", "2º Reforço") para mostrar a informação de forma mais clara.
+
+Opção de excluir também as alterações criadas no calendário

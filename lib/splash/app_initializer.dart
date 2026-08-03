@@ -27,6 +27,10 @@ import '../calendar/models/notice_model.dart';
 import '../calendar/enums/notice_enums.dart';
 import '../notes/models/task_model.dart';
 
+// ─── 🆕 Catálogo de Calendário Vacinal (editável) ─────────────────────────────
+import '../vaccines/models/calendar_models.dart';
+import '../vaccines/utils/calendar_seed.dart';
+
 // ─────────────────────────────────────────────────────────────────────────────
 // ESTADO DA INICIALIZAÇÃO
 // ─────────────────────────────────────────────────────────────────────────────
@@ -130,11 +134,15 @@ class AppInitializer extends StateNotifier<InitializationState> {
     _step('Carregando dados locais...', 0.45);
     await _openBoxes();
 
-    // ── Passo 4: Configuração ──────────────────────────────────────────────
+    // ── Passo 4: 🆕 Calendário vacinal (catálogo editável) ──────────────────
+    _step('Configurando calendário vacinal...', 0.65);
+    await CalendarSeed.runIfNeeded();
+
+    // ── Passo 5: Configuração ───────────────────────────────────────────────
     _step('Configurando ambiente...', 0.80);
     await Future.delayed(const Duration(milliseconds: 200));
 
-    // ── Passo 5: Finalização ───────────────────────────────────────────────
+    // ── Passo 6: Finalização ────────────────────────────────────────────────
     _step('Quase pronto...', 0.92);
     await Future.delayed(const Duration(milliseconds: 350));
 
@@ -184,8 +192,13 @@ class AppInitializer extends StateNotifier<InitializationState> {
 
     // Calendário e Notas
     Hive.registerAdapter(NoticeTypeAdapter());                // TypeId: 25
-    Hive.registerAdapter(NoticeModelAdapter());               // TypeId: 26
-    Hive.registerAdapter(TaskModelAdapter());                 // TypeId: 27 ← ausente no main original
+    Hive.registerAdapter(NoticeModelAdapter());                // TypeId: 26
+    Hive.registerAdapter(TaskModelAdapter());                  // TypeId: 27
+
+    // 🆕 Catálogo de Calendário Vacinal (editável pelo usuário)
+    Hive.registerAdapter(AgeUnitAdapter());                    // TypeId: 28
+    Hive.registerAdapter(VaccineGroupModelAdapter());           // TypeId: 29
+    Hive.registerAdapter(VaccineDefinitionModelAdapter());      // TypeId: 30
   }
 
   // ── Abertura paralela das boxes ───────────────────────────────────────────
@@ -199,6 +212,10 @@ class AppInitializer extends StateNotifier<InitializationState> {
       Hive.openBox<PregnantWomanModel>(HiveKeys.pregnantBox),
       Hive.openBox<NoticeModel>(HiveKeys.noticeBox),
       Hive.openBox<TaskModel>(HiveKeys.taskBox),
+      // 🆕 Catálogo de Calendário Vacinal
+      Hive.openBox<VaccineGroupModel>(HiveKeys.calendarGroupsBox),
+      Hive.openBox<VaccineDefinitionModel>(HiveKeys.calendarVaccinesBox),
+      Hive.openBox(HiveKeys.calendarMetaBox),
     ]);
   }
 }

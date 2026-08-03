@@ -17,10 +17,9 @@ class _CampaignVaccineDialogState extends ConsumerState<CampaignVaccineDialog> {
   final TextEditingController _nameCtrl = TextEditingController();
   int _selectedYear = DateTime.now().year;
 
-  // Sugestões Iniciais
+  // Sugestões Iniciais — Influenza e COVID-19 saíram daqui porque agora
+  // são vacinas PADRÃO (toggle) na aba de Campanhas, calculadas pela idade.
   static const List<String> _suggestions = [
-    'Influenza (Gripe)',
-    'COVID-19',
     'Poliomielite (Campanha)',
     'Sarampo (Campanha)',
   ];

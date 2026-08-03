@@ -20,19 +20,25 @@ class CampaignVaccineModelAdapter extends TypeAdapter<CampaignVaccineModel> {
       name: fields[0] as String,
       year: fields[1] as int,
       createdAt: fields[2] as DateTime,
+      applied: fields[3] == null ? true : fields[3] as bool,
+      dueAgeMonths: fields[4] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, CampaignVaccineModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
       ..write(obj.year)
       ..writeByte(2)
-      ..write(obj.createdAt);
+      ..write(obj.createdAt)
+      ..writeByte(3)
+      ..write(obj.applied)
+      ..writeByte(4)
+      ..write(obj.dueAgeMonths);
   }
 
   @override

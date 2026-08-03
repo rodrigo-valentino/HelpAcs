@@ -9,6 +9,10 @@ class CampaignController {
   final Ref ref;
   CampaignController(this.ref);
 
+  /// Fluxo LIVRE (já existia) — adiciona um registro histórico de campanha
+  /// com nome e ano digitados/selecionados pelo usuário. A existência do
+  /// registro já significa "foi tomada" (applied = true, comportamento
+  /// original mantido).
   Future<void> addCampaignVaccine({
     required int childKey,
     required String vaccineName,
@@ -18,7 +22,6 @@ class CampaignController {
     final child = box.get(childKey);
 
     if (child != null) {
-      // Adiciona o novo registro histórico
       child.campaignVaccines.add(
         CampaignVaccineModel(
           name: vaccineName,
@@ -28,10 +31,42 @@ class CampaignController {
       );
 
       await child.save();
-      
-      // Atualiza a tela de vacinação atual
       ref.invalidate(vaccinationControllerProvider(childKey));
     }
+  }
+
+  /// 🆕 Fluxo PADRÃO — marca/desmarca uma vacina de campanha predefinida
+  /// (ex.: Influenza aos 6 meses). Identifica o registro por
+  /// name + dueAgeMonths, não por posição na lista.
+  Future<void> toggleTemplateVaccine({
+    required int childKey,
+    required String name,
+    required int ageMonths,
+  }) async {
+    final box = Hive.box<ChildModel>(HiveKeys.childrenBox);
+    final child = box.get(childKey);
+    if (child == null) return;
+
+    final index = child.campaignVaccines.indexWhere(
+      (r) => r.name == name && r.dueAgeMonths == ageMonths,
+    );
+
+    if (index >= 0) {
+      child.campaignVaccines[index].applied = !child.campaignVaccines[index].applied;
+    } else {
+      child.campaignVaccines.add(
+        CampaignVaccineModel(
+          name: name,
+          year: DateTime.now().year,
+          createdAt: DateTime.now(),
+          applied: true,
+          dueAgeMonths: ageMonths,
+        ),
+      );
+    }
+
+    await child.save();
+    ref.invalidate(vaccinationControllerProvider(childKey));
   }
 
   Future<void> deleteCampaignVaccine({
@@ -49,5 +84,4 @@ class CampaignController {
   }
 }
 
-// Provider simples para injetar a classe onde precisarmos
 final campaignControllerProvider = Provider((ref) => CampaignController(ref));

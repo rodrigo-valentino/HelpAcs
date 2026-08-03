@@ -9,6 +9,7 @@ import '../providers/child_list_controller.dart';
 import '../dialogs/child_form_dialog.dart';
 import '../models/child_model.dart';
 import 'vaccination_page.dart';
+import 'calendar_management_page.dart';
 import '../../imports/import_button.dart';
 import '../../services/health_status_badge.dart';
 import '../../enums/health_status.dart';
@@ -93,6 +94,16 @@ class _ChildListPageState extends ConsumerState<ChildListPage> {
               onPressed: _deleteSelected,
             )
           else ...[
+            IconButton(
+              icon: const Icon(Icons.calendar_month_outlined),
+              tooltip: 'Calendário Vacinal',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const CalendarManagementPage()),
+                );
+              },
+            ),
             ImportButton(
               type: ImportPatientType.child,
               onImportRow: (row) async {
