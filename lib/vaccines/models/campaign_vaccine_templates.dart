@@ -1,13 +1,3 @@
-/// Vacinas de campanha PADRÃO — aparecem automaticamente no tab de
-/// Campanhas de cada paciente, como um toggle (marcar se tomou ou não),
-/// calculadas pela idade da criança em meses.
-///
-/// Diferente do Calendário Vacinal oficial (que agora é editável pelo
-/// usuário via CalendarManagementPage), esta lista é fixa no código de
-/// propósito — são poucos itens e mudam raramente. Se no futuro isso
-/// também precisar ser editável pelo usuário, dá para promover para o
-/// mesmo padrão de catálogo (VaccineGroupModel/VaccineDefinitionModel)
-/// usado no calendário oficial.
 class CampaignVaccineTemplate {
   final String name;
   final int? ageMonths;

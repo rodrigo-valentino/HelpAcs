@@ -70,22 +70,22 @@ class ChildListController extends AsyncNotifier<List<ChildModel>> {
     for (final record in existing) {
       final String? recordCpf = _normalizeCpf(record.cpf);
 
+      // Regra 1 — CPF igual (quando ambos têm) → duplicata certa
       if (incomingCpf != null && incomingCpf.isNotEmpty &&
           recordCpf != null && recordCpf.isNotEmpty &&
           incomingCpf == recordCpf) {
         throw Exception('já existe um paciente com o CPF ${child.cpf} cadastrado.');
       }
 
-      if ((incomingCpf == null || incomingCpf.isEmpty) &&
-          (recordCpf == null || recordCpf.isEmpty)) {
-        final sameDate = _sameDate(child.birthDate, record.birthDate);
-        final sameName = child.name.trim().toLowerCase() == record.name.trim().toLowerCase();
+      // Regra 2 — Nome + data de nascimento iguais já é duplicata,
+      // independente de um dos dois lados ter CPF preenchido ou não.
+      // Isso cobre o caso de reimportação, onde o CPF pode ter sido
+      // adicionado/editado depois do primeiro cadastro.
+      final sameDate = _sameDate(child.birthDate, record.birthDate);
+      final sameName = child.name.trim().toLowerCase() == record.name.trim().toLowerCase();
 
-        if (sameName && sameDate) {
-          throw Exception(
-            'já existe um paciente com o nome "${record.name}" e a mesma data de nascimento.',
-          );
-        }
+      if (sameName && sameDate) {
+        throw Exception('já existe um paciente com o nome "${record.name}" e a mesma data de nascimento.');
       }
     }
 

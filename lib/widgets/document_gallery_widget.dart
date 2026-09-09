@@ -3,11 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-/// 📂 GALERIA DE DOCUMENTOS / IMAGENS
-///
-/// Widget genérico para exibir, adicionar e remover imagens locais.
-/// - Totalmente standalone (sem AppSpacing, AppRadius, etc)
-/// - Compatível com armazenamento local por path
 class DocumentGalleryWidget extends StatefulWidget {
   final String title;
   final List<String> imagePaths;
@@ -32,9 +27,7 @@ class DocumentGalleryWidget extends StatefulWidget {
 class _DocumentGalleryWidgetState extends State<DocumentGalleryWidget> {
   final ImagePicker _picker = ImagePicker();
 
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // IMAGE PICK
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Future<void> _pickImage(ImageSource source) async {
     if (widget.imagePaths.length >= widget.maxImages) {
@@ -52,9 +45,7 @@ class _DocumentGalleryWidgetState extends State<DocumentGalleryWidget> {
     }
   }
 
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // UI HELPERS
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   void _showSnack(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -113,9 +104,7 @@ class _DocumentGalleryWidgetState extends State<DocumentGalleryWidget> {
     );
   }
 
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // BUILD
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   @override
   Widget build(BuildContext context) {
@@ -215,9 +204,7 @@ class _DocumentGalleryWidgetState extends State<DocumentGalleryWidget> {
   }
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // COMPONENTES AUXILIARES
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 class _Header extends StatelessWidget {
   final String title;

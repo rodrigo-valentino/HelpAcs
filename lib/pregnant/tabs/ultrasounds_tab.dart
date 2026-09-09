@@ -73,7 +73,6 @@ class UltrasoundsTab extends ConsumerWidget {
         heroTag: 'fab_ultrasound',
         backgroundColor: AppColors.primary,
         icon: const Icon(Icons.add, color: Colors.white),
-        // ✅ Passo 4: Extra -> Adicionar
         label: const Text('Adicionar',
             style:
                 TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),

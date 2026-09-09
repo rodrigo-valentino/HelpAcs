@@ -9,10 +9,6 @@ class CampaignController {
   final Ref ref;
   CampaignController(this.ref);
 
-  /// Fluxo LIVRE (já existia) — adiciona um registro histórico de campanha
-  /// com nome e ano digitados/selecionados pelo usuário. A existência do
-  /// registro já significa "foi tomada" (applied = true, comportamento
-  /// original mantido).
   Future<void> addCampaignVaccine({
     required int childKey,
     required String vaccineName,
@@ -35,9 +31,6 @@ class CampaignController {
     }
   }
 
-  /// 🆕 Fluxo PADRÃO — marca/desmarca uma vacina de campanha predefinida
-  /// (ex.: Influenza aos 6 meses). Identifica o registro por
-  /// name + dueAgeMonths, não por posição na lista.
   Future<void> toggleTemplateVaccine({
     required int childKey,
     required String name,

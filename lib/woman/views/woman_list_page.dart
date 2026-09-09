@@ -4,16 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../theme/app_colors.dart';
 import '../../utils/list_filter_service.dart';
 import '../../utils/feedback_helper.dart';
-// Imports de Importação
 import '../../imports/import_button.dart';
 import '../../imports/import_preview_dialog.dart';
+import '../../services/health_status_badge.dart';
 import '../models/woman_model.dart';
 import '../providers/woman_controller.dart';
 import '../dialogs/woman_form_dialog.dart'; 
 import '../dialogs/woman_details_dialog.dart';
-
-// ✅ Imports do novo padrão de Badge
-import '../../services/health_status_badge.dart';
 import '../components/woman_dashboard.dart';
 
 class WomanListPage extends ConsumerStatefulWidget {
@@ -77,12 +74,10 @@ class _WomanListPageState extends ConsumerState<WomanListPage> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        // ✅ Contador adicionado no AppBar
         title: _selectionController.isSelectionMode
             ? Text('${_selectionController.count} selecionada(s)')
             : asyncWomen.when(
                 data: (allWomen) {
-                  // Filtra a lista apenas para saber a quantidade exata caso haja busca
                   final filteredCount = _query.isEmpty
                       ? allWomen.length
                       : ListFilterService.filter<WomanModel>(
@@ -341,7 +336,6 @@ class _WomanListPageState extends ConsumerState<WomanListPage> {
     );
   }
 
-  // ✅ Utilizando o seu novo HealthStatusBadge
   Widget _buildStatusBadge(WomanModel woman) {
     if (woman.badgeStatus == null) {
       return const SizedBox.shrink();

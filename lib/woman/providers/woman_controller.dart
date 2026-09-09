@@ -21,18 +21,10 @@ class WomanController extends AsyncNotifier<List<WomanModel>> {
     return _fetchAll();
   }
 
-  // Hive é síncrono internamente; _fetchAll não precisa ser async.
-  // A ordenação final é responsabilidade da UI (ListFilterService),
-  // portanto não ordenamos aqui para evitar trabalho duplicado.
   List<WomanModel> _fetchAll() => _box.values.toList();
 
   // ── CRUD ───────────────────────────────────────────────────────────────────
 
-  /// Adiciona uma nova paciente.
-  ///
-  /// Lança [Exception] se já existir cadastro com o mesmo nome
-  /// (comparação case-insensitive e sem espaços extras), permitindo que
-  /// a UI — inclusive a importação em lote — exiba o erro corretamente.
   Future<void> addWoman(
     String name,
     DateTime birthDate, {
@@ -55,15 +47,9 @@ class WomanController extends AsyncNotifier<List<WomanModel>> {
 
     await _box.add(woman);
 
-    // Atualiza o estado diretamente, sem passar por AsyncValue.loading,
-    // evitando o flash de spinner na UI para operações síncronas do Hive.
     state = AsyncValue.data(_fetchAll());
   }
 
-  /// Atualiza a data de realização e próximo vencimento de um exame.
-  ///
-  /// Se [nextDate] não for fornecida, o sistema calcula automaticamente
-  /// usando os períodos definidos em [WomanStatusService].
   Future<void> updateExamDate(
     int id, {
     required DateTime lastDate,
@@ -87,20 +73,16 @@ class WomanController extends AsyncNotifier<List<WomanModel>> {
           );
     }
 
-    // save() é o correto para HiveObjects já linkados à box.
-    // put() seria redundante e potencialmente inconsistente.
     await woman.save();
 
     state = AsyncValue.data(_fetchAll());
   }
 
-  /// Exclui múltiplas pacientes pelos seus ids Hive.
   Future<void> deleteWomen(Set<int> ids) async {
     await _box.deleteAll(ids);
     state = AsyncValue.data(_fetchAll());
   }
 
-  /// Atualiza dados cadastrais (nome, nascimento, notas, tipo de atendimento).
   Future<void> updateWomanInfo(
     int id, {
     required String name,

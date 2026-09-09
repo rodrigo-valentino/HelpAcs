@@ -1,15 +1,18 @@
 import 'package:helpacs/imports/import_preview_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'vaccination_page.dart';
+import 'calendar_management_page.dart';
+
+import '../providers/child_list_controller.dart';
+import '../dialogs/child_form_dialog.dart';
+import '../models/child_model.dart';
+
 import '../../theme/app_colors.dart';
 import '../../theme/app_input_decoration.dart';
 import '../../utils/feedback_helper.dart';
 import '../../utils/list_filter_service.dart';
-import '../providers/child_list_controller.dart';
-import '../dialogs/child_form_dialog.dart';
-import '../models/child_model.dart';
-import 'vaccination_page.dart';
-import 'calendar_management_page.dart';
 import '../../imports/import_button.dart';
 import '../../services/health_status_badge.dart';
 import '../../enums/health_status.dart';
@@ -73,7 +76,7 @@ class _ChildListPageState extends ConsumerState<ChildListPage> {
 
   @override
   Widget build(BuildContext context) {
-    // 1. Escuta o provider que agora busca os dados do Hive
+
     final filteredList = ref.watch(filteredChildrenProvider);
     
     return Scaffold(
@@ -107,10 +110,6 @@ class _ChildListPageState extends ConsumerState<ChildListPage> {
             ImportButton(
               type: ImportPatientType.child,
               onImportRow: (row) async {
-                // Usa importChild (em vez de addChild) para garantir que
-                // registros duplicados sejam detectados e rejeitados antes
-                // de serem inseridos no banco — o ImportPreviewDialog captura
-                // a exceção e exibe o motivo na lista de falhas.
                 await ref.read(childListControllerProvider.notifier).importChild(
                   ChildModel(
                     name: row.name,
@@ -213,9 +212,9 @@ class _ChildListPageState extends ConsumerState<ChildListPage> {
       getAge: (child) => child.ageInDays, 
       getStatusWeight: (child) {
         switch (child.status) {
-          case HealthStatus.overdue: return 3; // 🚨 Atrasados sempre no topo (Prioridade 1)
-          case HealthStatus.warning: return 2; // ⚠️ Atenção (Prioridade 2)
-          case HealthStatus.pending: return 1; // ⏳ Pendente / Novo cadastro (Prioridade 3)
+          case HealthStatus.overdue: return 3;
+          case HealthStatus.warning: return 2; 
+          case HealthStatus.pending: return 1; 
           case HealthStatus.upToDate: return 0; }
       },
     );
@@ -353,13 +352,11 @@ class _ChildListPageState extends ConsumerState<ChildListPage> {
                 ),
               ),
               
-              // 🆕 BOTÃO DE EDIÇÃO ADICIONADO AQUI
-              if (!isSelected) // Só mostra o lápis se não estiver no modo de apagar
+              if (!isSelected) 
                 IconButton(
                   icon: const Icon(Icons.edit_outlined, color: AppColors.primary),
                   tooltip: 'Editar Paciente',
                   onPressed: () {
-                    // Chama o dialog que você já tem, passando a criança atual!
                     showDialog(
                       context: context,
                       builder: (context) => ChildFormDialog(childToEdit: child),

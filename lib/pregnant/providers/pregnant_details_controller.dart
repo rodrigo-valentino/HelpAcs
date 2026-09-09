@@ -16,8 +16,6 @@ final pregnantDetailsProvider =
 
 class PregnantDetailsNotifier extends FamilyNotifier<PregnantWomanModel?, int> {
   
-  // ✅ CORREÇÃO: Transformado em getter. 
-  // Evita o erro de inicialização e busca a box instantaneamente na memória do Hive.
   Box<PregnantWomanModel> get _box => Hive.box<PregnantWomanModel>(HiveKeys.pregnantBox);
 
   @override

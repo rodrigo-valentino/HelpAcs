@@ -40,7 +40,7 @@ class WomanDashboard extends ConsumerWidget {
           _StatCard(
             label: "Total",
             count: stats.total,
-            color: Colors.purple, // Cor tema do módulo
+            color: Colors.purple,
             icon: Icons.people_outline_rounded,
           ),
         ],

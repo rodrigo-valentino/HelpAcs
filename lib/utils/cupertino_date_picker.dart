@@ -65,7 +65,6 @@ class _CupertinoDatePickerWidgetState extends State<CupertinoDatePickerWidget> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // 1. Botão Cancelar (Mantém igual)
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: Text(
@@ -74,7 +73,6 @@ class _CupertinoDatePickerWidgetState extends State<CupertinoDatePickerWidget> {
                   ),
                 ),
                 
-                // 2. Título (ADICIONE O EXPANDED AQUI) ✅
                 Expanded(
                   child: Text(
                     widget.title,
@@ -86,7 +84,6 @@ class _CupertinoDatePickerWidgetState extends State<CupertinoDatePickerWidget> {
                   ),
                 ),
 
-                // 3. Botão Confirmar (Mantém igual)
                 TextButton(
                   onPressed: _confirm,
                   child: Text(
@@ -133,7 +130,6 @@ class _CupertinoDatePickerWidgetState extends State<CupertinoDatePickerWidget> {
   }
 }
 
-/// Helper function - CORRIGIDA PARA REMOVER HORAS/MINUTOS
 Future<DateTime?> showCupertinoDatePickerModal({
   required BuildContext context,
   required DateTime initialDate,
@@ -148,12 +144,12 @@ Future<DateTime?> showCupertinoDatePickerModal({
     return DateTime(date.year, date.month, date.day);
   }
 
-  // 1. Normaliza todas as datas para 00:00:00
+  // Normaliza todas as datas para 00:00:00
   final DateTime safeFirst = toDateOnly(firstDate ?? DateTime(1900));
   final DateTime safeLast = toDateOnly(lastDate ?? DateTime.now().add(const Duration(days: 365 * 2)));
   DateTime safeInitial = toDateOnly(initialDate);
 
-  // 2. Proteção extra: Garante que o initial está dentro do intervalo
+  // Proteção extra: Garante que o initial está dentro do intervalo
   if (safeInitial.isBefore(safeFirst)) safeInitial = safeFirst;
   if (safeInitial.isAfter(safeLast)) safeInitial = safeLast;
 

@@ -17,14 +17,11 @@ class _CampaignVaccineDialogState extends ConsumerState<CampaignVaccineDialog> {
   final TextEditingController _nameCtrl = TextEditingController();
   int _selectedYear = DateTime.now().year;
 
-  // Sugestões Iniciais — Influenza e COVID-19 saíram daqui porque agora
-  // são vacinas PADRÃO (toggle) na aba de Campanhas, calculadas pela idade.
   static const List<String> _suggestions = [
     'Poliomielite (Campanha)',
     'Sarampo (Campanha)',
   ];
 
-  // Gera os anos para o dropdown (ex: de 2020 até o ano atual + 1)
   List<int> get _years {
     final current = DateTime.now().year;
     return List<int>.generate(10, (index) => current + 1 - index);
@@ -64,13 +61,12 @@ class _CampaignVaccineDialogState extends ConsumerState<CampaignVaccineDialog> {
               const Text('Nome da vacina *', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
               const SizedBox(height: 6),
               
-              // AUTOCOMPLETE ELEGANTE
               RawAutocomplete<String>(
                 textEditingController: _nameCtrl,
                 focusNode: FocusNode(),
                 optionsBuilder: (TextEditingValue textEditingValue) {
                   if (textEditingValue.text.isEmpty) {
-                    return _suggestions; // Mostra todas ao clicar
+                    return _suggestions; 
                   }
                   return _suggestions.where((String option) {
                     return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
@@ -94,7 +90,7 @@ class _CampaignVaccineDialogState extends ConsumerState<CampaignVaccineDialog> {
                       elevation: 4,
                       borderRadius: BorderRadius.circular(12),
                       child: Container(
-                        width: MediaQuery.of(context).size.width - 96, // Ajuste para caber no dialog
+                        width: MediaQuery.of(context).size.width - 96, 
                         constraints: const BoxConstraints(maxHeight: 200),
                         child: ListView.builder(
                           padding: const EdgeInsets.symmetric(vertical: 8),

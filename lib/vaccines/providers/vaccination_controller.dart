@@ -26,9 +26,7 @@ class VaccinationController extends FamilyAsyncNotifier<ChildModel, int> {
   }
 
   Future<void> _saveAndSync() async {
-    // Lê a estrutura ATIVA e atual do calendário para recalcular o status.
-    // Como o calendário é editável, isso garante que o status sempre reflita
-    // as regras vigentes, não uma cópia congelada.
+
     final calendarStructure = ref.read(activeCalendarStructureProvider);
 
     _child.status = HealthStatusService.calculateOverallStatus(
@@ -42,9 +40,6 @@ class VaccinationController extends FamilyAsyncNotifier<ChildModel, int> {
     ref.invalidate(childListControllerProvider);
   }
 
-  /// Marca/desmarca uma dose oficial do catálogo (não-custom).
-  /// Agora identificada por vaccineDefinitionKey + doseNumber, não mais
-  /// por comparação de texto (name/group).
   Future<void> toggleVaccine({
     required int vaccineDefinitionKey,
     required int groupKey,
@@ -88,10 +83,6 @@ class VaccinationController extends FamilyAsyncNotifier<ChildModel, int> {
     await _saveAndSync();
   }
 
-  /// Vacina personalizada (fora do catálogo — não vira VaccineDefinitionModel).
-  /// Fica vinculada a um `groupKey` só para efeito de AGRUPAMENTO visual na
-  /// tela (aparece junto das vacinas oficiais daquele grupo). `groupLabel`
-  /// é gravado como snapshot de exibição, igual às vacinas oficiais.
   Future<void> addCustomVaccine({
     required int groupKey,
     required String groupLabel,

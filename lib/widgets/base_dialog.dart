@@ -2,8 +2,6 @@
 
 import 'package:flutter/material.dart';
 
-/// 🎯 SOLUÇÃO DRY: Template base para todos os diálogos
-/// Elimina duplicação de código de estrutura de diálogo
 class BaseDialog extends StatelessWidget {
   final String title;
   final IconData? icon;
@@ -96,7 +94,6 @@ class BaseDialog extends StatelessWidget {
   }
 
   Widget _buildActions(BuildContext context) {
-    // ✅ Alterado: Cancelar na Esquerda, Salvar na Direita
     return Row(
       children: [
         // 1. Botão Cancelar (Esquerda)
@@ -111,7 +108,6 @@ class BaseDialog extends StatelessWidget {
         ),
         const SizedBox(width: 12),
         
-        // 2. Botão Salvar (Direita) - Só aparece se tiver ação de save
         if (onSave != null) ...[
           Expanded(
             child: FilledButton(

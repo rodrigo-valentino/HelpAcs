@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/child_model.dart';
 import '../models/vaccine_record_model.dart';
+import '../models/campaign_vaccine_templates.dart';
+import '../models/campaign_vaccine_model.dart';
 import '../providers/vaccination_controller.dart';
 import '../providers/calendar_controller.dart';
+import '../dialogs/campaign_vaccine_dialog.dart';
+import '../dialogs/custom_vaccine_dialog.dart';
+import '../providers/campaign_controller.dart';
 import '../../utils/date_formatter.dart';
 import '../../widgets/document_gallery_widget.dart';
-import '../dialogs/custom_vaccine_dialog.dart';
 import '../../theme/app_colors.dart';
-import '../models/campaign_vaccine_model.dart';
-import '../dialogs/campaign_vaccine_dialog.dart';
-import '../providers/campaign_controller.dart';
-import '../models/campaign_vaccine_templates.dart';
 
 class VaccinationPage extends ConsumerStatefulWidget {
   final ChildModel child;
@@ -205,9 +206,6 @@ class _VaccinationPageState extends ConsumerState<VaccinationPage> {
     );
   }
 
-  /// Monta o cronograma a partir do CALENDÁRIO DINÂMICO (calendarStructure),
-  /// não mais da lista estática HealthStatusService.vaccineRules.
-  /// Vacinas personalizadas (isCustom) são mescladas por groupKey.
   Widget _buildVaccineTimeline(
     BuildContext context,
     WidgetRef ref,
@@ -412,8 +410,7 @@ class _VaccinationPageState extends ConsumerState<VaccinationPage> {
   }
 
   Widget _buildCampaignsView(ChildModel currentChild) {
-    // Lista LIVRE: exclui os registros que pertencem aos itens PADRÃO
-    // (dueAgeMonths != null), pois esses já são exibidos na seção de toggle.
+
     final freeList = currentChild.campaignVaccines.where((r) => r.dueAgeMonths == null).toList();
     freeList.sort((a, b) => b.year.compareTo(a.year));
 
@@ -492,9 +489,6 @@ class _VaccinationPageState extends ConsumerState<VaccinationPage> {
   }
 }
 
-/// Card de toggle para uma vacina de campanha PADRÃO (Influenza, COVID...),
-/// calculada pela idade da criança. Segue o mesmo padrão visual das doses
-/// oficiais do cronograma, para consistência.
 class _CampaignTemplateCard extends ConsumerWidget {
   final int childKey;
   final CampaignVaccineTemplate template;
@@ -562,8 +556,6 @@ class _CampaignTemplateCard extends ConsumerWidget {
   }
 }
 
-/// Card visual de cada dose. Identifica a vacina/dose por
-/// vaccineDefinitionKey + doseNumber (oficiais) em vez de nome/grupo em texto.
 class _VaccineCardWidget extends ConsumerWidget {
   final dynamic childKey;
   final String displayName;
@@ -632,8 +624,6 @@ class _VaccineCardWidget extends ConsumerWidget {
               ? null
               : () {
                   if (isCustom) {
-                    // Toggle de vacina personalizada fica como próximo passo
-                    // (hoje o controller só cria; ver README_ETAPAS).
                     return;
                   }
                   ref.read(vaccinationControllerProvider(childKey as int).notifier).toggleVaccine(

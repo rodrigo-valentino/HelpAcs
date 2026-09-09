@@ -3,9 +3,7 @@ import 'package:uuid/uuid.dart';
 
 part 'task_model.g.dart';
 
-// ─────────────────────────────────────────────
 // TypeId 27 — Modelo de Tarefa / Pendência
-// ─────────────────────────────────────────────
 
 @HiveType(typeId: 27)
 class TaskModel extends HiveObject {
@@ -24,9 +22,7 @@ class TaskModel extends HiveObject {
   @HiveField(4)
   late DateTime createdAt;
 
-  // ─────────────────────────────────────────────────────
   // FACTORY
-  // ─────────────────────────────────────────────────────
 
   static TaskModel create({
     required String title,

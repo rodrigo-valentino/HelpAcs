@@ -9,12 +9,7 @@ part 'woman_model.g.dart';
 
 @HiveType(typeId: 5)
 class WomanModel extends HiveObject {
-  // ── Identificador ──────────────────────────────────────────────────────────
 
-  /// Chave Hive convertida para int.
-  ///
-  /// ⚠️ Acesso antes do primeiro [save]/[add] retorna -1 (estado inválido).
-  /// O assert em modo debug ajuda a detectar esse uso acidental.
   int get id {
     assert(
       key != null,
@@ -47,10 +42,6 @@ class WomanModel extends HiveObject {
   @HiveField(6)
   String? notes;
 
-  // Nota de migration: campo adicionado após a versão inicial.
-  // Dados gravados antes deste campo existir serão lidos pelo adapter gerado
-  // como o valor padrão do Dart para bool (false), e NÃO como true.
-  // Se isso for um problema, considere migrar com: isSus ??= true no controller.
   @HiveField(7)
   bool isSus = true;
 
@@ -59,24 +50,15 @@ class WomanModel extends HiveObject {
   int get age => DateFormatter.calculateAge(birthDate);
 
   // ── Delegação ao WomanStatusService ───────────────────────────────────────
-  //
-  // A lógica clínica (faixas etárias, períodos, cálculo de status) vive em
-  // WomanStatusService. O model apenas expõe os resultados para conveniência
-  // de uso nas widgets e no ListFilterService.
 
-  /// Status do preventivo. `null` = fora da faixa etária (25–64 anos).
   HealthStatus? get preventivoStatus =>
       WomanStatusService.getPreventivoStatus(this);
 
-  /// Status da mamografia. `null` = fora da faixa etária (50–74 anos).
   HealthStatus? get mammographyStatus =>
       WomanStatusService.getMammographyStatus(this);
 
-  /// Status mais crítico para exibição no badge da lista.
-  /// `null` = nenhum exame aplicável para esta paciente.
   HealthStatus? get badgeStatus => WomanStatusService.getBadgeStatus(this);
 
-  /// Peso numérico para ordenação por prioridade (4 = mais crítico).
   int get generalStatusWeight =>
       WomanStatusService.getGeneralStatusWeight(this);
 }
@@ -84,8 +66,7 @@ class WomanModel extends HiveObject {
 // ── Extensões ──────────────────────────────────────────────────────────────
 
 extension WomanListExtensions on List<WomanModel> {
-  /// Busca uma paciente pelo id sem lançar exceção.
-  /// Retorna `null` se não encontrada.
+
   WomanModel? lookup(int id) {
     try {
       return firstWhere((e) => e.id == id);

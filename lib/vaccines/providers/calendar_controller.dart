@@ -3,8 +3,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../models/calendar_models.dart';
 import '../../utils/hive_keys.dart';
 
-/// Estrutura de leitura combinada: um grupo com suas vacinas já resolvidas.
-/// Não é um HiveObject — é só uma view de conveniência para a UI/serviços.
 class VaccineGroupWithVaccines {
   final VaccineGroupModel group;
   final List<VaccineDefinitionModel> vaccines;
@@ -14,9 +12,7 @@ class VaccineGroupWithVaccines {
   int get groupKey => group.key as int;
 }
 
-// =====================================================================
 // GRUPOS
-// =====================================================================
 
 final calendarGroupsProvider =
     AsyncNotifierProvider<CalendarGroupsController, List<VaccineGroupModel>>(
@@ -78,9 +74,6 @@ class CalendarGroupsController extends AsyncNotifier<List<VaccineGroupModel>> {
     await _refresh();
   }
 
-  /// Soft delete. O grupo some das telas de novo cronograma, mas continua
-  /// no banco — registros históricos que apontam para ele continuam
-  /// funcionando normalmente via snapshot em VaccineRecord.
   Future<void> archiveGroup(int groupKey) async {
     final group = _box.get(groupKey);
     if (group == null) return;
@@ -99,14 +92,6 @@ class CalendarGroupsController extends AsyncNotifier<List<VaccineGroupModel>> {
     await _refresh();
   }
 
-  /// Exclusão PERMANENTE. Diferente de `archiveGroup`, não é reversível.
-  /// Cascateia: também exclui permanentemente todas as vacinas que
-  /// pertencem a este grupo (senão elas ficariam "órfãs", com groupKey
-  /// apontando para um grupo que não existe mais).
-  /// Não afeta o histórico de pacientes (VaccineRecord.name/group já
-  /// gravados continuam intactos como snapshot — só não são mais
-  /// resolvidos por ID, exatamente como já acontece hoje com um grupo
-  /// arquivado).
   Future<void> deleteGroup(int groupKey) async {
     final vaccinesBox = Hive.box<VaccineDefinitionModel>(HiveKeys.calendarVaccinesBox);
     final vaccineKeysToDelete =
@@ -119,7 +104,6 @@ class CalendarGroupsController extends AsyncNotifier<List<VaccineGroupModel>> {
     ref.invalidate(calendarVaccinesProvider);
   }
 
-  /// Recebe a lista de keys na nova ordem desejada (arrastar-e-soltar na UI).
   Future<void> reorderGroups(List<int> orderedGroupKeys) async {
     for (var i = 0; i < orderedGroupKeys.length; i++) {
       final group = _box.get(orderedGroupKeys[i]);
@@ -132,9 +116,7 @@ class CalendarGroupsController extends AsyncNotifier<List<VaccineGroupModel>> {
   }
 }
 
-// =====================================================================
 // VACINAS
-// =====================================================================
 
 final calendarVaccinesProvider = AsyncNotifierProvider<CalendarVaccinesController,
     List<VaccineDefinitionModel>>(
@@ -187,7 +169,7 @@ class CalendarVaccinesController extends AsyncNotifier<List<VaccineDefinitionMod
     String? name,
     int? totalDoses,
     String? notes,
-    int? groupKey, // permite mover de grupo
+    int? groupKey, 
   }) async {
     final vaccine = _box.get(vaccineKey);
     if (vaccine == null) return;
@@ -202,9 +184,6 @@ class CalendarVaccinesController extends AsyncNotifier<List<VaccineDefinitionMod
     await _refresh();
   }
 
-  /// Soft delete — histórico já registrado (VaccineRecord.vaccineDefinitionKey)
-  /// continua íntegro; a UI de histórico cai para o snapshot (name/group)
-  /// quando encontra uma definição arquivada.
   Future<void> archiveVaccine(int vaccineKey) async {
     final vaccine = _box.get(vaccineKey);
     if (vaccine == null) return;
@@ -223,10 +202,6 @@ class CalendarVaccinesController extends AsyncNotifier<List<VaccineDefinitionMod
     await _refresh();
   }
 
-  /// Exclusão PERMANENTE. Diferente de `archiveVaccine`, não é reversível.
-  /// O histórico de pacientes (VaccineRecord.name/group) continua intacto
-  /// como snapshot — só deixa de ser resolvido por ID, igual já acontece
-  /// hoje com uma vacina arquivada.
   Future<void> deleteVaccine(int vaccineKey) async {
     await _box.delete(vaccineKey);
     await _refresh();
@@ -244,12 +219,6 @@ class CalendarVaccinesController extends AsyncNotifier<List<VaccineDefinitionMod
   }
 }
 
-// =====================================================================
-// ESTRUTURA COMBINADA (usada pela tela de cronograma e pelo HealthStatusService)
-// =====================================================================
-
-/// Estrutura completa (inclui grupos/vacinas arquivados) — usada na tela
-/// de gerenciamento, onde o usuário precisa ver/restaurar itens arquivados.
 final fullCalendarStructureProvider = Provider<List<VaccineGroupWithVaccines>>((ref) {
   final groups = ref.watch(calendarGroupsProvider).valueOrNull ?? [];
   final vaccines = ref.watch(calendarVaccinesProvider).valueOrNull ?? [];
@@ -262,9 +231,6 @@ final fullCalendarStructureProvider = Provider<List<VaccineGroupWithVaccines>>((
   }).toList();
 });
 
-/// Estrutura filtrada só com o que está ATIVO — usada para montar o
-/// cronograma de novos cadastros e para o cálculo de status geral.
-/// Grupos que ficam vazios após o filtro de vacinas ativas são omitidos.
 final activeCalendarStructureProvider = Provider<List<VaccineGroupWithVaccines>>((ref) {
   final full = ref.watch(fullCalendarStructureProvider);
   return full

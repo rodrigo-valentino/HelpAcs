@@ -40,7 +40,7 @@ class NoticeCalendarWidget extends ConsumerWidget {
           // Injeta os dados para os indicadores aparecerem nas datas
           dataSource: _NoticeDataSource(notices),
 
-          // ✅ Número da semana ativado como você pediu
+          // Número da semana 
           showWeekNumber: true,
           weekNumberStyle: WeekNumberStyle(
             backgroundColor: Colors.grey.shade50,

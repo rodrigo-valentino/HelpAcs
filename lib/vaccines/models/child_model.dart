@@ -34,7 +34,7 @@ class ChildModel extends HiveObject {
   @HiveField(7)
   List<VaccineRecord> vaccines;
 
-  @HiveField(8) // Use o próximo número disponível no seu ChildModel
+  @HiveField(8) 
   List<CampaignVaccineModel> campaignVaccines;
 
   ChildModel({
@@ -51,9 +51,7 @@ class ChildModel extends HiveObject {
         vaccines = vaccines ?? [],
         campaignVaccines = campaignVaccines ?? [];
 
-  // =========================
   // Helpers
-  // =========================
 
   int get ageInDays =>
       DateTime.now().difference(birthDate).inDays;

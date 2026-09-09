@@ -4,6 +4,8 @@ import '../../../utils/feedback_helper.dart';
 import '../controllers/profile_controller.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_input_decoration.dart';
+import 'help_support_page.dart';
+import 'about_page.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
@@ -33,7 +35,6 @@ class ProfilePage extends ConsumerWidget {
           return ListView(
             padding: const EdgeInsets.all(20),
             children: [
-              // 1. CABEÇALHO (Dados Reais do Controller)
               Center(
                 child: Column(
                   children: [
@@ -61,7 +62,6 @@ class ProfilePage extends ConsumerWidget {
 
               const SizedBox(height: 32),
 
-              // 2. CARD DE NOTIFICAÇÕES (Funcional)
               _buildCard(
                 title: "Configurações de Notificação",
                 children: [
@@ -94,7 +94,6 @@ class ProfilePage extends ConsumerWidget {
                           ],
                         ),
                       ),
-                      // Seletores Circulares (3, 7, 14)
                       Row(
                         children: [3, 7, 14].map((day) {
                           final isSelected = profile.reminderDaysBefore == day;
@@ -132,7 +131,6 @@ class ProfilePage extends ConsumerWidget {
 
               const SizedBox(height: 20),
 
-              // 3. CARD DE CONTA
               _buildCard(
                 title: "Conta",
                 children: [
@@ -142,8 +140,22 @@ class ProfilePage extends ConsumerWidget {
                     onTap: () => _showEditProfileDialog(context, controller, profile.name, profile.email)
                   ),
                   _buildListTile(icon: Icons.lock_outline, title: "Alterar Senha", onTap: () => FeedbackHelper.showInfo(context, "Funcionalidade futura")),
-                  _buildListTile(icon: Icons.help_outline, title: "Ajuda e Suporte", onTap: () {}),
-                  _buildListTile(icon: Icons.info_outline, title: "Sobre", onTap: () {}),
+                  _buildListTile(
+                    icon: Icons.help_outline,
+                    title: "Ajuda e Suporte",
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const HelpSupportPage()),
+                    ),
+                  ),
+                  _buildListTile(
+                    icon: Icons.info_outline,
+                    title: "Sobre",
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const AboutPage()),
+                    ),
+                  ),
                   const Divider(),
                   _buildListTile(
                     icon: Icons.delete_outline,
@@ -152,7 +164,6 @@ class ProfilePage extends ConsumerWidget {
                     onTap: () async {
                        final confirm = await FeedbackHelper.showDeleteConfirmation(context, title: "Excluir Conta", itemName: "seus dados");
                        if(confirm) {
-                         // Lógica de wipe data aqui
                        }
                     },
                   ),
@@ -161,7 +172,6 @@ class ProfilePage extends ConsumerWidget {
 
               const SizedBox(height: 32),
 
-              // 4. BOTÃO SAIR
               SizedBox(
                 width: double.infinity,
                 child: TextButton.icon(

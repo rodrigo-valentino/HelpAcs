@@ -146,7 +146,6 @@ class _PregnantFormDialogState extends ConsumerState<PregnantFormDialog> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // 1. Nome
               _buildLabel('Nome Completo'),
               TextFormField(
                 controller: _nameCtrl,
@@ -163,7 +162,6 @@ class _PregnantFormDialogState extends ConsumerState<PregnantFormDialog> {
               ),
               const SizedBox(height: 16),
 
-              // 2. Data de Nascimento
               _buildLabel('Data de Nascimento'),
               InkWell(
                 onTap: () => _pickDate(isBirthDate: true),
@@ -225,7 +223,6 @@ class _PregnantFormDialogState extends ConsumerState<PregnantFormDialog> {
 
               const SizedBox(height: 16),
 
-              // 3. Classificação de Risco
               _buildLabel('Classificação de Risco da Gestação'),
               Container(
                 decoration: BoxDecoration(
@@ -263,12 +260,7 @@ class _PregnantFormDialogState extends ConsumerState<PregnantFormDialog> {
               ),
               const SizedBox(height: 16),
 
-              // 4. Parâmetros da Gestação (DUM ou DPP)
               _buildLabel('Cálculo Gestacional (Opcional)'),
-
-              // ✅ Corrigido: RadioGroup removido — API instável entre versões do Flutter.
-              // Substituído por RadioListTile com groupValue e onChanged explícitos,
-              // que é o padrão estável suportado em todas as versões.
               Row(
                 children: [
                   Expanded(
@@ -360,8 +352,6 @@ class _PregnantFormDialogState extends ConsumerState<PregnantFormDialog> {
               ),
 
               const SizedBox(height: 16),
-
-              // 5. Observações
               _buildLabel('Observações Gerais (Opcional)'),
               TextFormField(
                 controller: _notesCtrl,

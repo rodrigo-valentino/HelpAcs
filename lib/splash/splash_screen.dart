@@ -1,14 +1,10 @@
-// lib/splash/splash_screen.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app_initializer.dart';
 import '../home/pages/home_page.dart';
 
-// ─────────────────────────────────────────────────────────────────────────────
 // SPLASH SCREEN
-// ─────────────────────────────────────────────────────────────────────────────
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -25,14 +21,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   
   bool _hasNavigated = false;
 
-  // Cor exata do seu pubspec.yaml para dar continuidade ao splash nativo
   static const _bgColor = Color(0xFFA9CCE3);
 
   @override
   void initState() {
     super.initState();
     
-    // Animação suave para os elementos que vão aparecer sobre o fundo
     _fadeController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 800),
@@ -92,7 +86,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                 child: ClipOval(
                   child: Image.asset(
                     'assets/images/logo_foreground.png',
-                    width: 160, // Ajustado ligeiramente para casar com o tamanho do Android
+                    width: 160, 
                     height: 160,
                     fit: BoxFit.cover,
                   ),
@@ -129,10 +123,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     );
   }
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// SEÇÃO INFERIOR — Barra de progresso + mensagem dinâmica
-// ─────────────────────────────────────────────────────────────────────────────
 
 class _BottomSection extends StatelessWidget {
   final InitializationState initState;

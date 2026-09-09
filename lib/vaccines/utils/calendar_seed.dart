@@ -2,10 +2,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../models/calendar_models.dart';
 import '../../utils/hive_keys.dart';
 
-/// Roda uma única vez (checado via calendarMetaBox) para popular o
-/// catálogo editável a partir do calendário oficial atual. A partir daí,
-/// o usuário assume o controle total via CalendarController — este seed
-/// nunca mais roda de novo.
 class CalendarSeed {
   CalendarSeed._();
 
@@ -25,7 +21,6 @@ class CalendarSeed {
       return;
     }
 
-    // Estrutura: (label, ageValue, ageUnit, [ (nomeVacina, totalDoses) ])
     final seed = <(String, int, AgeUnit, List<(String, int)>)>[
       ('Ao nascer', 0, AgeUnit.days, [
         ('BCG', 1),

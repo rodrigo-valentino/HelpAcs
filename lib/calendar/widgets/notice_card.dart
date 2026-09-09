@@ -53,7 +53,7 @@ class NoticeCard extends StatelessWidget {
     final difference = eventDate.difference(today).inDays;
 
     String text;
-    Color bgColor = const Color(0xFFFFB300); // Amarelo/Mostarda padrão
+    Color bgColor = const Color(0xFFFFB300); // Amarelo
     Color textColor = Colors.white;
 
     if (difference == 0) {
@@ -70,7 +70,7 @@ class NoticeCard extends StatelessWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3), // Um pouco menor
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(12),
@@ -79,7 +79,7 @@ class NoticeCard extends StatelessWidget {
         text,
         style: TextStyle(
           color: textColor,
-          fontSize: 10, // Fonte reduzida para economizar espaço
+          fontSize: 10,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -89,7 +89,6 @@ class NoticeCard extends StatelessWidget {
   // ─── Helper de Data Formatada ────────────────────────────────────
   
   String _formatDate(DateTime date) {
-    // Nova formatação mais curta: "Segunda, 22/05/2026"
     final diasSemana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
     
     final diaSemana = diasSemana[date.weekday - 1];
@@ -104,7 +103,7 @@ class NoticeCard extends StatelessWidget {
     final typeColor = _getTypeColor(notice.type);
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12), // Margem reduzida
+      margin: const EdgeInsets.only(bottom: 12), 
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
@@ -118,13 +117,13 @@ class NoticeCard extends StatelessWidget {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(12.0), // Paddings mais apertados para mobile
+        padding: const EdgeInsets.all(12.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // ÍCONE LATERAL
             Container(
-              padding: const EdgeInsets.all(8), // Ícone ligeiramente menor
+              padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: typeColor.withAlpha(25), 
                 shape: BoxShape.circle,
@@ -138,7 +137,6 @@ class NoticeCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Título, Badge de Tipo e Lápis de Edição
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -150,7 +148,7 @@ class NoticeCard extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             color: Colors.black87,
                           ),
-                          maxLines: 2, // Impede títulos enormes de quebrarem o layout
+                          maxLines: 2, 
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -173,7 +171,6 @@ class NoticeCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 2),
-                      // Lápis de edição
                       SizedBox(
                         width: 24,
                         height: 24,
@@ -214,7 +211,6 @@ class NoticeCard extends StatelessWidget {
                   
                   const SizedBox(height: 6),
 
-                  // Descrição (Limitada a 2 linhas para evitar overflow vertical)
                   if (notice.description != null && notice.description!.trim().isNotEmpty) ...[
                     Text(
                       notice.description!,

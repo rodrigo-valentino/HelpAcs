@@ -63,11 +63,9 @@ class PregnantItemCard extends StatelessWidget {
           ),
         ],
       ),
-      // ✅ 2. ClipRRect: Corta as bordas quadradas do container interno
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: Container(
-          // ✅ 3. Inner Container: Cor de fundo e as Bordas diferentes (sem borderRadius aqui)
           decoration: BoxDecoration(
             color: Colors.white,
             border: Border(

@@ -1,12 +1,9 @@
-// lib/main.dart
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import './theme/app_colors.dart';
 import './splash/splash_screen.dart'; 
-
 
 void main() async {
   // Único requisito antes do runApp: binding do Flutter
@@ -59,7 +56,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
 
-      // ── Rota inicial: Splash (navega para HomePage quando pronta) ────────
+      // ── Rota inicial: Splash ────────
       home: const SplashScreen(),
     );
   }

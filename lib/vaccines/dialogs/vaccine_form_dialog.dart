@@ -7,11 +7,9 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_input_decoration.dart';
 
 class VaccineFormDialog extends ConsumerStatefulWidget {
-  /// Grupo sob o qual a vacina será criada (ignorado se estiver editando
-  /// e o usuário trocar o grupo pelo dropdown).
+
   final int groupKey;
 
-  /// Se informado, o diálogo abre em modo de edição.
   final VaccineDefinitionModel? vaccineToEdit;
 
   const VaccineFormDialog({

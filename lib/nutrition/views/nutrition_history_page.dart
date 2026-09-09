@@ -105,9 +105,7 @@ class NutritionHistoryPage extends ConsumerWidget {
   }
 }
 
-// ========================================
-// 🧩 WIDGET: CARD DE HISTÓRICO EXPANSÍVEL
-// ========================================
+// CARD DE HISTÓRICO EXPANSÍVEL
 class _HistoryCardWidget extends StatelessWidget {
   final NutritionRecordModel record;
   final VoidCallback onDelete;
@@ -185,7 +183,7 @@ class _HistoryCardWidget extends StatelessWidget {
 
   // Renderiza as respostas baseadas na faixa etária
   Widget _buildAnswersList() {
-    final validAnswers = record.validAnswers; // Usa a extension
+    final validAnswers = record.validAnswers;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -198,13 +196,11 @@ class _HistoryCardWidget extends StatelessWidget {
           );
         }
         
-        // Se for Enum (Sim, Não, N. Sabe, Frequencia, Consistencia)
         return _buildAnswerRow(item.label, item.answer);
       }).toList(),
     );
   }
 
-  // Ajustamos para receber dynamic, pois pode ser NutritionAnswer, FoodFrequency ou FoodConsistency
   Widget _buildAnswerRow(String label, dynamic answer) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
@@ -218,7 +214,6 @@ class _HistoryCardWidget extends StatelessWidget {
     );
   }
 
-  // Tratamos a exibição das novas categorias
   Widget _buildBadge(dynamic answer) {
     Color bgColor = AppColors.infoSurface;
     Color textColor = AppColors.primary;

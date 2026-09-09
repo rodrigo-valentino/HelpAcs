@@ -72,9 +72,8 @@ class _NutritionFormPageState extends ConsumerState<NutritionFormPage> {
     );
   }
 
-  // ========================================
-  // 🍼 FAIXA 1: Menores de 6 Meses
-  // ========================================
+  //  Menores de 6 Meses
+
   Widget _buildUnderSixMonthsSection(
       NutritionRecordModel state, NutritionFormController controller) {
     return Column(
@@ -102,9 +101,7 @@ class _NutritionFormPageState extends ConsumerState<NutritionFormPage> {
     );
   }
 
-  // ========================================
-  // 🥄 FAIXA 2: 6 a 23 Meses
-  // ========================================
+  // 6 a 23 Meses
   Widget _buildSixToTwentyThreeMonthsSection(
       NutritionRecordModel state, NutritionFormController controller) {
     return Column(
@@ -166,9 +163,7 @@ class _NutritionFormPageState extends ConsumerState<NutritionFormPage> {
     );
   }
 
-  // ========================================
-  // 🧒 FAIXA 3: 2 a 10 Anos
-  // ========================================
+  // 2 a 10 Anos
   Widget _buildTwoToTenYearsSection(
       NutritionRecordModel state, NutritionFormController controller) {
     final meals = ['Café da Manhã', 'Lanche Manhã', 'Almoço', 'Lanche Tarde', 'Jantar', 'Ceia'];
@@ -230,9 +225,7 @@ class _NutritionFormPageState extends ConsumerState<NutritionFormPage> {
     );
   }
 
-  // ========================================
-  // 🔘 WIDGETS DE OPÇÕES
-  // ========================================
+  // WIDGETS DE OPÇÕES
 
   Widget _buildConsistencyOptions(
       String label, FoodConsistency currentValue, ValueChanged<FoodConsistency> onChanged) {
@@ -441,40 +434,43 @@ class _NutritionFormPageState extends ConsumerState<NutritionFormPage> {
           height: 50,
           child: FilledButton(
             onPressed: _isSaving
-                ? null
-                : () async {
-                    setState(() => _isSaving = true);
-                    final result = await controller.saveRecord();
-                    if (!context.mounted) return;
-                    setState(() => _isSaving = false);
+              ? null
+              : () async {
+                  setState(() => _isSaving = true);
+                  final result = await controller.saveRecord();
+                  if (!context.mounted) return;
+                  setState(() => _isSaving = false);
 
-                    switch (result) {
-                      case FormSaveResult.success:
-                        FeedbackHelper.showSuccess(context, 'Avaliação salva com sucesso!');
-                        if (context.mounted) Navigator.pop(context);
-                        break;
-                      case FormSaveResult.emptyForm:
-                        FeedbackHelper.showError(
-                            context, 'Preencha pelo menos um campo para salvar.');
-                        break;
-                      case FormSaveResult.error:
-                        FeedbackHelper.showError(
-                            context, 'Falha no banco de dados. Tente novamente.');
-                        break;
-                    }
-                  },
-            style: FilledButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
-            child: _isSaving
-                ? const SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(
-                        color: Colors.white, strokeWidth: 2))
-                : const Text('Salvar Avaliação',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  switch (result.status) {
+                    case FormSaveResult.success:
+                      FeedbackHelper.showSuccess(context, 'Avaliação salva com sucesso!');
+                      if (context.mounted) Navigator.pop(context);
+                      break;
+                    case FormSaveResult.incomplete:
+                      FeedbackHelper.showError(
+                        context,
+                        'Faltam preencher: ${result.missingFields.join(", ")}',
+                        duration: const Duration(seconds: 6),
+                      );
+                      break;
+                    case FormSaveResult.error:
+                      FeedbackHelper.showError(
+                          context, 'Falha no banco de dados. Tente novamente.');
+                      break;
+                  }
+                },
+              style: FilledButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              child: _isSaving
+                  ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                          color: Colors.white, strokeWidth: 2))
+                  : const Text('Salvar Avaliação',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           ),
         ),
       ),

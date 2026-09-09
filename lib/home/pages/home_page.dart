@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../profile/controllers/profile_controller.dart';
 import '../../theme/app_colors.dart';
-import '../../vaccines/views/child_list_page.dart';
 import '../../profile/pages/profile_page.dart';
+import '../../profile/controllers/profile_controller.dart';
+import '../../woman/providers/woman_controller.dart';
+import '../../pregnant/providers/pregnant_list_controller.dart';
+import '../../vaccines/providers/child_list_controller.dart';
+import '../../vaccines/views/child_list_page.dart';
 import '../../nutrition/views/nutrition_children_list_page.dart';
 import '../../woman/views/woman_list_page.dart';
 import '../../pregnant/views/pregnant_list_page.dart';
-
-// ✅ Novo import da página do calendário
 import '../../calendar/views/calendar_page.dart'; 
 import '../../notes/views/task_page.dart';
+
+import 'package:flutter/foundation.dart'; //para kDebugMode
+import '../../debug/seed_test_data.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -26,6 +30,34 @@ class HomePage extends ConsumerWidget {
     if (hour >= 18) greeting = 'Boa noite';
 
     return Scaffold(
+      floatingActionButton: kDebugMode
+      ? FloatingActionButton.extended(
+          heroTag: 'seed_debug_fab',
+          backgroundColor: Colors.black87,
+          icon: const Icon(Icons.bug_report, color: Colors.white),
+          label: const Text(
+            'Seed Teste',
+            style: TextStyle(color: Colors.white),
+          ),
+          onPressed: () async {
+            await SeedTestData.run();
+
+            // Força os providers a relerem as boxes do zero
+            ref.invalidate(childListControllerProvider);
+            ref.invalidate(womanListControllerProvider);
+            ref.invalidate(pregnantListProvider);
+
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Dados de teste criados com sucesso!'),
+                  backgroundColor: Colors.green,
+                ),
+              );
+            }
+          },
+        )
+      : null,
       backgroundColor: const Color(0xFFF5F7FA),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -184,7 +216,6 @@ class HomePage extends ConsumerWidget {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: () {
-                    // ✅ Navega para o calendário em tela cheia
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (_) => const MuralPage()),
@@ -261,7 +292,6 @@ class HomePage extends ConsumerWidget {
   }
 }
 
-// --- COMPONENTE INTERNO: CARD DO MÓDULO ---
 class _HomeModuleCard extends StatelessWidget {
   final String title;
   final String subtitle;

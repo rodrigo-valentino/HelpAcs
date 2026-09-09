@@ -54,9 +54,7 @@ class PregnantWomanModel extends HiveObject {
   @HiveField(12)
   DateTime createdAt = DateTime.now();
 
-  // ─────────────────────────────────────────────────────
   // GETTERS — Idade da mulher
-  // ─────────────────────────────────────────────────────
 
   int get age {
     final now = DateTime.now();
@@ -70,9 +68,7 @@ class PregnantWomanModel extends HiveObject {
 
   String get ageLabel => '$age anos';
 
-  // ─────────────────────────────────────────────────────
   // GETTERS — Datas de gestação
-  // ─────────────────────────────────────────────────────
 
   DateTime? get effectiveDum {
     if (dum != null) return dum;
@@ -86,9 +82,7 @@ class PregnantWomanModel extends HiveObject {
     return null;
   }
 
-  // ─────────────────────────────────────────────────────
   // GETTERS — Idade gestacional
-  // ─────────────────────────────────────────────────────
 
   int? get gestationalAgeDays {
     final dumDate = effectiveDum;
@@ -134,23 +128,18 @@ class PregnantWomanModel extends HiveObject {
     return '$weeks semanas e $days dias';
   }
 
-  // ─────────────────────────────────────────────────────
-  // GETTERS — Progresso do pré-natal (✅ Passo 5)
-  // ─────────────────────────────────────────────────────
+  // GETTERS — Progresso do pré-natal 
 
-  // Considera estritamente apenas as consultas de 1 a 6
   int get completedFixedConsultations => consultations.where((c) =>
       (c.type == ConsultationType.first || c.type == ConsultationType.second ||
        c.type == ConsultationType.third || c.type == ConsultationType.fourth ||
        c.type == ConsultationType.fifth || c.type == ConsultationType.sixth) &&
       c.completed).length;
 
-  // Considera apenas ultrassons que não são itens adicionados manualmente
   int get completedFixedUltrasounds => ultrasounds.where((u) => 
       u.customName == null && 
       u.completed).length;
 
-  // Considera estritamente DTPa e Influenza
   int get administeredFixedVaccines => vaccines.where((v) =>
       (v.type == PrenatalVaccineType.dtpa || v.type == PrenatalVaccineType.influenza) &&
       v.administered).length;
@@ -172,9 +161,7 @@ class PregnantWomanModel extends HiveObject {
       '$completedFixedUltrasounds/4 Ultrassons  •  '
       '$administeredFixedVaccines/2 Vacinas';
 
-  // ─────────────────────────────────────────────────────
   // FACTORY
-  // ─────────────────────────────────────────────────────
 
   static PregnantWomanModel create({
     required String name,

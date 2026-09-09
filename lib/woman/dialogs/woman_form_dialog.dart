@@ -30,7 +30,6 @@ class _WomanFormDialogState extends ConsumerState<WomanFormDialog> {
   @override
   void initState() {
     super.initState();
-    // ✅ Inicializa com dados existentes se for edição
     _nameCtrl = TextEditingController(text: widget.woman?.name);
     _notesCtrl = TextEditingController(text: widget.woman?.notes);
     _birthDate = widget.woman?.birthDate;
@@ -109,7 +108,6 @@ class _WomanFormDialogState extends ConsumerState<WomanFormDialog> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // 1. Nome
               _buildLabel('Nome Completo'),
               TextFormField(
                 controller: _nameCtrl,
@@ -124,7 +122,6 @@ class _WomanFormDialogState extends ConsumerState<WomanFormDialog> {
               ),
               const SizedBox(height: 16),
 
-              // 2. Data de Nascimento
               _buildLabel('Data de Nascimento'),
               InkWell(
                 onTap: _pickDate,
@@ -180,7 +177,6 @@ class _WomanFormDialogState extends ConsumerState<WomanFormDialog> {
 
               const SizedBox(height: 16),
 
-              // 3. Tipo de Atendimento (SUS / Particular) ✅
               _buildLabel('Tipo de Atendimento'),
               Container(
                 decoration: BoxDecoration(
@@ -209,7 +205,6 @@ class _WomanFormDialogState extends ConsumerState<WomanFormDialog> {
 
               const SizedBox(height: 16),
 
-              // 4. Observações
               _buildLabel('Observações (opcional)'),
               TextFormField(
                 controller: _notesCtrl,

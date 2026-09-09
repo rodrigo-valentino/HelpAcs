@@ -5,15 +5,8 @@ import '../theme/app_colors.dart';
 import '../utils/date_formatter.dart';
 import '../imports/import_service.dart';
 
-// ─────────────────────────────────────────────────────────────────────────────
 // ENUM: Tipo de paciente sendo importado
-// ─────────────────────────────────────────────────────────────────────────────
-
 enum ImportPatientType { woman, child }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// PROVIDER DE ESTADO DO IMPORT (Isolado por instância do Dialog)
-// ─────────────────────────────────────────────────────────────────────────────
 
 /// Estado interno do processo de importação em lote
 class _BulkImportState {
@@ -568,9 +561,7 @@ class _ImportPreviewDialogState extends State<_ImportPreviewDialog> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 // WIDGET AUXILIAR: Card de resumo
-// ─────────────────────────────────────────────────────────────────────────────
 
 class _SummaryCard extends StatelessWidget {
   final int count;

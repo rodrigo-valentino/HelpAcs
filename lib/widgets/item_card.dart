@@ -5,7 +5,7 @@ class PregnantItemCard extends StatelessWidget {
   final String subtitle;
   final bool isCompleted;
   final String? notes;
-  final bool isCustom; // Define se pode ser excluído/editado
+  final bool isCustom;
   final VoidCallback onToggle;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
@@ -43,7 +43,7 @@ class PregnantItemCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFF7ED), // Cor de fundo similar à imagem (laranja bem claro)
+        color: const Color(0xFFFFF7ED),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.orange.withAlpha(77)),
       ),
@@ -56,7 +56,7 @@ class PregnantItemCard extends StatelessWidget {
             height: 32,
             decoration: BoxDecoration(
               color: isCompleted ? Colors.green : Colors.grey.shade600,
-              borderRadius: BorderRadius.circular(8), // Checkbox arredondado da imagem
+              borderRadius: BorderRadius.circular(8), 
             ),
             child: isCompleted
                 ? const Icon(Icons.check, color: Colors.white, size: 20)
@@ -74,7 +74,6 @@ class PregnantItemCard extends StatelessWidget {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Ícone de observação (Azul) - Só aparece se houver texto
             if (notes != null && notes!.trim().isNotEmpty)
               IconButton(
                 icon: const Icon(Icons.info_outline, color: Colors.blue),
@@ -82,7 +81,6 @@ class PregnantItemCard extends StatelessWidget {
                 tooltip: 'Ver observação',
               ),
             
-            // Menu de opções (Editar / Excluir) - Só para itens extras
             if (isCustom)
               PopupMenuButton<String>(
                 icon: const Icon(Icons.more_vert, color: Colors.grey),

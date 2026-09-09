@@ -35,7 +35,7 @@ class _ChildFormDialogState extends ConsumerState<ChildFormDialog> {
       _nameCtrl.text = c.name;
       _guardianCtrl.text = c.guardianName ?? '';
       _notesCtrl.text = c.notes ?? '';
-      _cpfCtrl.text = c.cpf ?? ''; // Preenche com o que estiver no banco
+      _cpfCtrl.text = c.cpf ?? ''; 
       _birthDate = c.birthDate;
     }
   }
@@ -73,7 +73,7 @@ class _ChildFormDialogState extends ConsumerState<ChildFormDialog> {
       onSubmit: () async {
         if (_birthDate == null) {
           setState(() => _dateError = 'A data de nascimento é obrigatória');
-          return false; // Apenas para a execução aqui. O BaseFormDialog não fechará.
+          return false; 
         }
         
         bool dateChanged = false;
@@ -104,7 +104,7 @@ class _ChildFormDialogState extends ConsumerState<ChildFormDialog> {
 
         if (isEditing) {
           await notifier.updateChild(
-            key: widget.childToEdit!.key, // Usando a 'key' do Hive
+            key: widget.childToEdit!.key, 
             name: _nameCtrl.text.trim(),
             birthDate: _birthDate!,
             guardian: _guardianCtrl.text.trim(),
@@ -235,7 +235,7 @@ class _ChildFormDialogState extends ConsumerState<ChildFormDialog> {
               _buildLabel('CPF (opcional)'),
               TextFormField(
                 controller: _cpfCtrl,
-                keyboardType: TextInputType.number, // Aciona o teclado numérico
+                keyboardType: TextInputType.number,
                 decoration: AppInputDecoration.outlined(
                   hint: 'Apenas números',
                   prefixIcon: Icons.badge_outlined,

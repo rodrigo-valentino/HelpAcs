@@ -38,7 +38,7 @@ class ProfileController extends AsyncNotifier<ProfileModel> {
     state = AsyncValue.data(profile);
   }
 
-  // Altera os dias de lembrete (Chamado nas bolinhas 3, 7, 14)
+  // Altera os dias de lembrete
   Future<void> setReminderDays(int days) async {
     final box = Hive.box<ProfileModel>(HiveKeys.profileBox);
     final profile = box.get(HiveKeys.adminProfile) ?? ProfileModel();

@@ -129,36 +129,42 @@ class _ReportCardWidget extends StatelessWidget {
                             color: AppColors.textPrimary)),
                     const SizedBox(height: 4),
                     Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            '📄 CPF: ${_formatCpf(cpf)}',
-                            style: TextStyle(
-                                color: Colors.grey.shade600, fontSize: 12),
-                            overflow: TextOverflow.ellipsis,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'CPF: ${_formatCpf(cpf)}',
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
                           ),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        const SizedBox(width: 8),
-                        Text('DN: $dob',
-                            style: TextStyle(
-                                color: Colors.grey.shade600, fontSize: 12)),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    Row(
-                      children: [
-                        Icon(Icons.calendar_today,
-                            size: 12, color: Colors.grey.shade500),
-                        const SizedBox(width: 4),
-                        Text(
-                          _formatAssessmentDate(record.assessmentDate),
-                          style: TextStyle(
-                              color: Colors.grey.shade500, fontSize: 12),
+                      ),
+                      const SizedBox(width: 8),
+                      Icon(Icons.calendar_today, size: 10, color: Colors.grey.shade500),
+                      const SizedBox(width: 4),
+                      Text(
+                        _formatAssessmentDate(record.assessmentDate),
+                        style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Text(
+                        'DN: $dob',
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
                         ),
-                        const Spacer(),
-                        _buildAgeBadge(record.ageCategory),
-                      ],
-                    ),
+                      ),
+                      const Spacer(),
+                      _buildAgeBadge(record.ageCategory),
+                    ],
+                  ),
                   ],
                 ),
               ),
@@ -237,28 +243,45 @@ class _ReportCardWidget extends StatelessWidget {
     IconData icon;
     String text;
 
-    switch (answer) {
-      case NutritionAnswer.yes:
-        iconColor = AppColors.success;
-        icon = Icons.check_circle_outline;
-        text = 'Sim';
-        break;
-      case NutritionAnswer.no:
-        iconColor = AppColors.error;
-        icon = Icons.cancel_outlined;
-        text = 'Não';
-        break;
-      case NutritionAnswer.dontKnow:
-        iconColor = AppColors.warning;
-        icon = Icons.help_outline;
-        text = 'Não Sabe';
-        break;
-      default:
-        return const SizedBox.shrink();
+    if (answer is NutritionAnswer) {
+      switch (answer) {
+        case NutritionAnswer.yes:
+          iconColor = AppColors.success;
+          icon = Icons.check_circle_outline;
+          text = 'Sim';
+          break;
+        case NutritionAnswer.no:
+          iconColor = AppColors.error;
+          icon = Icons.cancel_outlined;
+          text = 'Não';
+          break;
+        case NutritionAnswer.dontKnow:
+          iconColor = AppColors.warning;
+          icon = Icons.help_outline;
+          text = 'Não Sabe';
+          break;
+        case NutritionAnswer.unanswered:
+          return const SizedBox.shrink();
+      }
+    } else if (answer is FoodFrequency) {
+      iconColor = AppColors.info;
+      icon = Icons.repeat;
+      text = answer.label;
+    } else if (answer is FoodConsistency) {
+      iconColor = AppColors.info;
+      icon = Icons.blender_outlined;
+      text = answer.label;
+    } else if (answer is String && answer.isNotEmpty) {
+      // Ex: "Refeições realizadas" (dailyMeals já vem como String junta)
+      iconColor = AppColors.primary;
+      icon = Icons.restaurant_menu;
+      text = answer;
+    } else {
+      return const SizedBox.shrink();
     }
 
     return Container(
-      width: 140,
+      constraints: const BoxConstraints(minWidth: 140),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: AppColors.inputFill,
@@ -266,23 +289,26 @@ class _ReportCardWidget extends StatelessWidget {
         border: Border.all(color: AppColors.border),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(label,
-              style:
-                  const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
               maxLines: 1,
               overflow: TextOverflow.ellipsis),
           const SizedBox(height: 4),
           Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(icon, size: 14, color: iconColor),
               const SizedBox(width: 4),
-              Text(text,
-                  style: TextStyle(
-                      fontSize: 12,
-                      color: iconColor,
-                      fontWeight: FontWeight.bold)),
+              Flexible(
+                child: Text(text,
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: iconColor,
+                        fontWeight: FontWeight.bold)),
+              ),
             ],
           ),
         ],

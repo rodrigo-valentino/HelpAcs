@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 
 part 'profile_model.g.dart'; // Lembre-se de rodar o build_runner!
 
-@HiveType(typeId: 2) // Usando o próximo ID disponível
+@HiveType(typeId: 2) 
 class ProfileModel extends HiveObject {
   @HiveField(0)
   String name;

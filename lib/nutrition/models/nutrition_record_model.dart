@@ -2,9 +2,7 @@ import 'package:hive/hive.dart';
 
 part 'nutrition_record_model.g.dart';
 
-// ========================================
-// 📊 ENUMS DE RESPOSTAS & EXTENSIONS
-// ========================================
+// ENUMS DE RESPOSTAS & EXTENSIONS
 
 @HiveType(typeId: 10)
 enum NutritionAnswer {
@@ -76,9 +74,7 @@ extension AgeCategoryLabel on AgeCategory {
   };
 }
 
-// ========================================
 // 📝 MODELO PRINCIPAL
-// ========================================
 
 @HiveType(typeId: 14)
 class NutritionRecordModel extends HiveObject {

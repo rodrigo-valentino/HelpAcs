@@ -7,12 +7,6 @@ import '../dialogs/vaccine_form_dialog.dart';
 import '../../theme/app_colors.dart';
 import '../../utils/feedback_helper.dart';
 
-/// Tela DEDICADA de gerenciamento do calendário vacinal.
-///
-/// Fica separada da tela de cronograma da criança (VaccinationPage) de
-/// propósito: são contextos diferentes (edição GLOBAL vs. registro de UM
-/// paciente), e misturar os dois aumenta o risco do usuário editar o
-/// calendário de todo mundo pensando que está mexendo só naquela criança.
 class CalendarManagementPage extends ConsumerStatefulWidget {
   const CalendarManagementPage({super.key});
 

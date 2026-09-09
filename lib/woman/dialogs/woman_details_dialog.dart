@@ -129,7 +129,6 @@ class WomanDetailsDialog extends ConsumerWidget {
               onPressed: () {
                 showDialog(
                   context: context,
-                  // Passa currentWoman (reativo) — não o woman original do construtor.
                   builder: (_) => WomanFormDialog(woman: woman),
                 );
               },
@@ -276,9 +275,6 @@ class _ExamCard extends StatelessWidget {
     );
   }
 
-  /// Badge exibido quando a paciente está fora da faixa etária do exame.
-  /// O tooltip explica o motivo para o agente de saúde, evitando confusão
-  /// quando a paciente transita de uma faixa para outra.
   Widget _buildNotApplicableBadge() {
     return Tooltip(
       message: 'Paciente fora da faixa etária para este exame',

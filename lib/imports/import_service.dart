@@ -5,10 +5,6 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
-// ─────────────────────────────────────────────────────────────────────────────
-// MODELOS DE RESULTADO
-// ─────────────────────────────────────────────────────────────────────────────
-
 /// Uma linha lida da planilha, após o parsing
 class ImportedPatientRow {
   final String name;
@@ -26,7 +22,7 @@ class ImportedPatientRow {
 /// Resultado completo de uma operação de leitura de arquivo
 class ImportResult {
   final List<ImportedPatientRow> rows;
-  final List<String> skippedReasons; // Linhas ignoradas com motivo
+  final List<String> skippedReasons; 
   final String fileName;
 
   const ImportResult({
@@ -39,10 +35,6 @@ class ImportResult {
   int get validCount => rows.length;
   int get skippedCount => skippedReasons.length;
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// MAPEAMENTO DE COLUNAS
-// ─────────────────────────────────────────────────────────────────────────────
 
 /// Mapeamento de quais colunas foram detectadas na planilha
 class ColumnMapping {
@@ -57,10 +49,6 @@ class ColumnMapping {
   });
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// SERVIÇO PRINCIPAL
-// ─────────────────────────────────────────────────────────────────────────────
-
 class ImportService {
   // Formatos de data suportados (do mais específico para o mais genérico)
   static final _dateFormats = [
@@ -72,21 +60,19 @@ class ImportService {
     DateFormat('MM/dd/yyyy'), // Formato americano
   ];
 
-  // Palavras-chave para detectar coluna de nome
-  static const _nameKeywords = [
-    'nome', 'name', 'paciente', 'criança', 'mulher', 'beneficiário'
-  ];
+  static const _nameKeywords = ['nome', 'name', 'paciente', 'crianca', 'mulher', 'beneficiario'];
 
-  // Palavras-chave para detectar coluna de data
   static const _dateKeywords = [
     'data', 'nascimento', 'nasc', 'birth', 'dn', 'datanasc', 'data_nasc',
     'dt_nasc', 'dtnasc'
   ];
 
-  static const _cpfKeywords = [
-    'cpf', 'document', 'rg', 'id'
-  ];
+  static const _cpfKeywords = ['cpf', 'documento', 'rg', 'id'];
 
+  static bool _hasKeyword(String normalizedText, List<String> keywords) {
+    return keywords.any((k) =>
+        RegExp(r'\b' + RegExp.escape(k) + r'\b').hasMatch(normalizedText));
+    }
   // ── ABRIR ARQUIVO ──────────────────────────────────────────────────────────
 
   /// Abre o seletor de arquivos e retorna o resultado do parsing.
@@ -97,7 +83,6 @@ class ImportService {
       allowedExtensions: ['csv', 'xlsx', 'xls'],
       withData: true, // Importante: lê bytes em memória (funciona em Android/iOS)
     );
-
     if (result == null || result.files.isEmpty) return null;
 
     final file = result.files.first;
@@ -262,21 +247,17 @@ class ImportService {
 
     // Tenta encontrar pelas palavras-chave
     for (int i = 0; i < headerRow.length; i++) {
-  final cell = headerRow[i].toString().toLowerCase().trim();
-  final normalized = _removeDiacritics(cell);
+      final cell = headerRow[i].toString().toLowerCase().trim();
+      final normalized = _removeDiacritics(cell);
 
-    if (_nameKeywords.any((k) => normalized.contains(k)) &&
-        nameCol == 0) {
-      nameCol = i;
-
-    } else if (_dateKeywords.any((k) => normalized.contains(k)) &&
-        dateCol == 1) {
-      dateCol = i;
-
-    } else if (_cpfKeywords.any((k) => normalized.contains(k))) {
-      cpfCol = i;
+      if (_hasKeyword(normalized, _nameKeywords) && nameCol == 0) {
+        nameCol = i;
+      } else if (_hasKeyword(normalized, _dateKeywords) && dateCol == 1) {
+        dateCol = i;
+      } else if (_hasKeyword(normalized, _cpfKeywords)) {
+        cpfCol = i;
+      }
     }
-  }
 
     // Garantia: nome e data não podem ser a mesma coluna
     if (nameCol == dateCol) dateCol = nameCol == 0 ? 1 : 0;

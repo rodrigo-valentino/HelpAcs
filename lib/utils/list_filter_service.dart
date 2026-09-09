@@ -4,9 +4,9 @@ import 'package:flutter/foundation.dart';
 enum SortType {
   nameAZ,
   nameZA,
-  ageYoungest, // Mais novos primeiro
-  ageOldest,   // Mais velhos primeiro
-  statusWorstFirst, // Atrasados no topo
+  ageYoungest, 
+  ageOldest,   
+  statusWorstFirst, 
 }
 
 class SelectionController<T> extends ChangeNotifier {
@@ -64,8 +64,6 @@ class ListFilterService {
     return normalized;
   }
 
-  /// 🚀 MELHORIA: Busca por TOKENS
-  /// Agora "Silva Joao" encontra "João da Silva"
   static List<T> filter<T>({
     required List<T> items,
     required String query,
@@ -73,22 +71,18 @@ class ListFilterService {
   }) {
     if (query.isEmpty) return items;
     
-    // 1. Normaliza e quebra a busca em palavras (tokens)
+    // Normaliza e quebra a busca em palavras (tokens)
     final normalizedQuery = normalize(query);
     final queryTokens = normalizedQuery.split(' ').where((t) => t.isNotEmpty).toList();
 
     if (queryTokens.isEmpty) return items;
 
     return items.where((item) {
-      // 2. Concatena todos os campos pesquisáveis do item em uma única "stringão"
-      // Ex: "joao da silva | maria oliveira (responsavel)"
+      // Concatena todos os campos pesquisáveis do item em uma única string
       final itemFields = selectors(item)
           .where((s) => s != null)
           .map((s) => normalize(s!))
-          .join(' '); 
-
-      // 3. Verifica se TODAS as palavras digitadas existem nos campos do item
-      // Isso permite buscar "Joao Silva" e achar "João da Silva"
+          .join(' ');
       return queryTokens.every((token) => itemFields.contains(token));
     }).toList();
   }

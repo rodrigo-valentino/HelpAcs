@@ -95,8 +95,7 @@ class _WomanExamUpdateDialogState
       );
       return true;
     } catch (e) {
-      // Antes: o erro era silenciado com "return false" e o dialog apenas
-      // ficava aberto sem nenhuma mensagem — o agente não sabia o que ocorreu.
+
       if (mounted) {
         FeedbackHelper.showError(
           context,

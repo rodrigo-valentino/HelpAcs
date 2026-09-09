@@ -7,7 +7,7 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_input_decoration.dart';
 
 class GroupFormDialog extends ConsumerStatefulWidget {
-  /// Se informado, o diálogo abre em modo de edição.
+  
   final VaccineGroupModel? groupToEdit;
 
   const GroupFormDialog({super.key, this.groupToEdit});

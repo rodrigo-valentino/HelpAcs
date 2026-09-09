@@ -26,7 +26,7 @@ class NutritionReportController extends AutoDisposeAsyncNotifier<List<NutritionR
     records.sort((a, b) => b.assessmentDate.compareTo(a.assessmentDate));
 
     final List<NutritionReportItem> reportItems = [];
-    final List<int> orphanedKeys = []; // 🚀 Guarda as chaves para limpeza
+    final List<int> orphanedKeys = []; 
 
     for (final record in records) {
       final child = childrenBox.get(record.childKey);
@@ -34,18 +34,14 @@ class NutritionReportController extends AutoDisposeAsyncNotifier<List<NutritionR
       if (child != null) {
         reportItems.add(NutritionReportItem(record: record, child: child));
       } else {
-        // Se a criança não existe mais, marcamos esse registro nutricional para exclusão
         if (record.key != null) {
            orphanedKeys.add(record.key);
         }
       }
     }
 
-    // 🚀 Lixeiro Automático: Remove os registros fantasmas do Hive para não inchar o banco
     if (orphanedKeys.isNotEmpty) {
       await nutritionBox.deleteAll(orphanedKeys);
-      // Você pode até colocar um debugPrint aqui para monitorar em desenvolvimento
-      // debugPrint('Limpou ${orphanedKeys.length} registros nutricionais órfãos.');
     }
 
     return reportItems;

@@ -89,7 +89,6 @@ class PregnantDetailsPage extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ✅ Passo 2: Badge ao lado do nome
           Row(
             children: [
               Expanded(
@@ -143,7 +142,6 @@ class PregnantDetailsPage extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           
-          // ✅ Passo 6: Card Idade Gestacional + DPP 
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(16),

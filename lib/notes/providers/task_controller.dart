@@ -4,9 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../models/task_model.dart';
 import '../../utils/hive_keys.dart';
 
-// ─────────────────────────────────────────────────────────
 // 1. PROVIDERS DE ESTADO DA INTERFACE (UI)
-// ─────────────────────────────────────────────────────────
 
 /// Controla se o formulário "Nova Tarefa" está aberto
 final taskFormExpandedProvider = StateProvider<bool>((ref) => false);
@@ -14,9 +12,7 @@ final taskFormExpandedProvider = StateProvider<bool>((ref) => false);
 /// Controla qual tarefa está sendo editada
 final taskEditingProvider = StateProvider<TaskModel?>((ref) => null);
 
-// ─────────────────────────────────────────────────────────
 // 2. PROVIDER DE DADOS (HIVE CRUD)
-// ─────────────────────────────────────────────────────────
 
 final taskListProvider = NotifierProvider<TaskListNotifier, List<TaskModel>>(() {
   return TaskListNotifier();
@@ -40,7 +36,6 @@ class TaskListNotifier extends Notifier<List<TaskModel>> {
     return _getSortedTasks();
   }
 
-  /// Pendentes no topo (criação mais recente), depois concluídas
   List<TaskModel> _getSortedTasks() {
     final tasks = _box.values.toList();
     tasks.sort((a, b) => b.createdAt.compareTo(a.createdAt));

@@ -15,9 +15,7 @@ enum PregnancyRisk {
   highRisk,
 }
 
-// ─────────────────────────────────────────────
 // TypeId 21 — Tipo de Consulta (6 fixas)
-// ─────────────────────────────────────────────
 
 @HiveType(typeId: 21)
 enum ConsultationType {
@@ -43,14 +41,12 @@ enum ConsultationType {
   dental,
 }
 
-// ─────────────────────────────────────────────
-// TypeId 22 — Tipo de Ultrassom (4 fixos)
-// ─────────────────────────────────────────────
+// TypeId 22 — Tipo de Ultrassom
 
 @HiveType(typeId: 22)
 enum UltrasoundType {
   @HiveField(0)
-  dating, // Datação (início)
+  dating, // Datação
 
   @HiveField(1)
   morphologicalFirst, // Morfológico 1º Trimestre
@@ -63,9 +59,7 @@ enum UltrasoundType {
 
 }
 
-// ─────────────────────────────────────────────
-// TypeId 23 — Tipo de Exame Laboratorial (6 fixos)
-// ─────────────────────────────────────────────
+// TypeId 23 — Tipo de Exame Laboratorial 
 
 @HiveType(typeId: 23)
 enum LabExamType {
@@ -86,9 +80,7 @@ enum LabExamType {
 
 }
 
-// ─────────────────────────────────────────────
-// TypeId 24 — Tipo de Vacina Pré-Natal (3 fixas)
-// ─────────────────────────────────────────────
+// TypeId 24 — Tipo de Vacina Pré-Natal 
 
 @HiveType(typeId: 24)
 enum PrenatalVaccineType {
@@ -103,10 +95,7 @@ enum PrenatalVaccineType {
 
 }
 
-// ─────────────────────────────────────────────
 // EXTENSÕES — Labels em português
-// ─────────────────────────────────────────────
-
 extension PregnancyRiskLabel on PregnancyRisk {
   String get label {
     switch (this) {

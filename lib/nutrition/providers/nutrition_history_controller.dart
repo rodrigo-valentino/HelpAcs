@@ -23,15 +23,15 @@ class NutritionHistoryController extends AutoDisposeFamilyAsyncNotifier<List<Nut
     return records;
   }
 
-  // 🚀 Bug #5: Garante que o Box está aberto antes de deletar
+  // Garante que o Box está aberto antes de deletar
   Future<bool> deleteRecord(int recordKey) async {
     try {
       _box ??= await Hive.openBox<NutritionRecordModel>(HiveKeys.nutritionBox);
       await _box!.delete(recordKey);
       state = AsyncValue.data(_fetchSortedRecords()); 
-      return true; // 🚀 Retorna sucesso
+      return true; 
     } catch (e) {
-      return false; // 🚀 Retorna falha para a UI
+      return false; 
     }
   }
 }

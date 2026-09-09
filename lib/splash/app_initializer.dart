@@ -1,39 +1,29 @@
-// lib/splash/app_initializer.dart
-
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-// ─── Módulos anteriores ──────────────────────────────────────────────────────
 import '../vaccines/models/child_model.dart';
 import '../vaccines/models/vaccine_record_model.dart';
 import '../vaccines/models/campaign_vaccine_model.dart';
+import '../vaccines/models/calendar_models.dart';
+import '../vaccines/utils/calendar_seed.dart';
 import '../profile/models/profile_model.dart';
 import '../enums/health_status.dart';
 import '../nutrition/models/nutrition_record_model.dart';
 import '../woman/models/woman_model.dart';
 import '../utils/hive_keys.dart';
-
-// ─── Módulo Gestantes ─────────────────────────────────────────────────────────
 import '../pregnant/models/pregnant_woman_model.dart';
 import '../pregnant/models/prenatal_consultation_model.dart';
 import '../pregnant/models/ultrasound_exam_model.dart';
 import '../pregnant/models/lab_exam_model.dart';
 import '../pregnant/models/prenatal_vaccine_model.dart';
 import '../pregnant/enums/pregnancy_enums.dart';
-
-// ─── Calendário e Notas ───────────────────────────────────────────────────────
 import '../calendar/models/notice_model.dart';
 import '../calendar/enums/notice_enums.dart';
 import '../notes/models/task_model.dart';
 
-// ─── 🆕 Catálogo de Calendário Vacinal (editável) ─────────────────────────────
-import '../vaccines/models/calendar_models.dart';
-import '../vaccines/utils/calendar_seed.dart';
 
-// ─────────────────────────────────────────────────────────────────────────────
 // ESTADO DA INICIALIZAÇÃO
-// ─────────────────────────────────────────────────────────────────────────────
 
 enum InitStatus { idle, running, complete, error }
 
@@ -69,18 +59,14 @@ class InitializationState {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 // PROVIDER
-// ─────────────────────────────────────────────────────────────────────────────
 
 final appInitializerProvider =
     StateNotifierProvider<AppInitializer, InitializationState>((ref) {
   return AppInitializer();
 });
 
-// ─────────────────────────────────────────────────────────────────────────────
 // NOTIFIER — orquestra cada passo com progresso granular
-// ─────────────────────────────────────────────────────────────────────────────
 
 class AppInitializer extends StateNotifier<InitializationState> {
   AppInitializer() : super(const InitializationState());
@@ -96,7 +82,6 @@ class AppInitializer extends StateNotifier<InitializationState> {
       await _runInitSequence().timeout(
         const Duration(seconds: 30),
         onTimeout: () {
-          // Chamado pelo dart:async quando o tempo limite é atingido
           if (!state.hasError) {
             state = state.copyWith(
               status: InitStatus.error,
@@ -109,7 +94,7 @@ class AppInitializer extends StateNotifier<InitializationState> {
         },
       );
     } catch (e) {
-      // Somente sobrescreve se ainda não foi marcado como erro (ex: pelo onTimeout)
+      // Somente sobrescreve se ainda não foi marcado como erro
       if (!state.hasError) {
         state = state.copyWith(
           status: InitStatus.error,
@@ -195,7 +180,7 @@ class AppInitializer extends StateNotifier<InitializationState> {
     Hive.registerAdapter(NoticeModelAdapter());                // TypeId: 26
     Hive.registerAdapter(TaskModelAdapter());                  // TypeId: 27
 
-    // 🆕 Catálogo de Calendário Vacinal (editável pelo usuário)
+    // Catálogo de Calendário Vacinal
     Hive.registerAdapter(AgeUnitAdapter());                    // TypeId: 28
     Hive.registerAdapter(VaccineGroupModelAdapter());           // TypeId: 29
     Hive.registerAdapter(VaccineDefinitionModelAdapter());      // TypeId: 30
@@ -212,7 +197,6 @@ class AppInitializer extends StateNotifier<InitializationState> {
       Hive.openBox<PregnantWomanModel>(HiveKeys.pregnantBox),
       Hive.openBox<NoticeModel>(HiveKeys.noticeBox),
       Hive.openBox<TaskModel>(HiveKeys.taskBox),
-      // 🆕 Catálogo de Calendário Vacinal
       Hive.openBox<VaccineGroupModel>(HiveKeys.calendarGroupsBox),
       Hive.openBox<VaccineDefinitionModel>(HiveKeys.calendarVaccinesBox),
       Hive.openBox(HiveKeys.calendarMetaBox),

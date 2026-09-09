@@ -19,7 +19,7 @@ class FeedbackHelper {
     );
   }
   
-  /// ⚠️ Aviso
+  /// Aviso
   static void showWarning(
     BuildContext context,
     String message, {

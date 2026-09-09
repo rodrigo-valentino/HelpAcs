@@ -1,7 +1,7 @@
 // lib/utils/date_formatter.dart
 
 class DateFormatter {
-  DateFormatter._(); // Construtor privado (classe utilitária)
+  DateFormatter._();
   
   /// Formata data no padrão brasileiro: DD/MM/YYYY
   static String format(DateTime date) {

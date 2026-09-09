@@ -10,7 +10,6 @@ class ManageItemDialog extends StatefulWidget {
   final DateTime? initialDate;
   final String? initialNotes;
   
-  /// Retorna os dados para a Tab que chamou este diálogo salvar no Hive
   final Future<void> Function(String name, DateTime? date, String? notes) onSave;
 
   const ManageItemDialog({
@@ -51,8 +50,8 @@ class _ManageItemDialogState extends State<ManageItemDialog> {
     final picked = await showDatePicker(
       context: context,
       initialDate: _selectedDate ?? DateTime.now(),
-      firstDate: DateTime.now().subtract(const Duration(days: 300)), // Permite datas retroativas recentes
-      lastDate: DateTime.now().add(const Duration(days: 300)),       // Permite agendamentos futuros
+      firstDate: DateTime.now().subtract(const Duration(days: 300)), 
+      lastDate: DateTime.now().add(const Duration(days: 300)),       
     );
 
     if (picked != null) {
@@ -69,13 +68,12 @@ class _ManageItemDialogState extends State<ManageItemDialog> {
       icon: isEdit ? Icons.edit_note_rounded : Icons.add_circle_outline_rounded,
       isEditMode: isEdit,
       onSubmit: () async {
-        // Envia os dados coletados de volta para a Tab que acionou o diálogo
         await widget.onSave(
           _nameController.text.trim(),
           _selectedDate,
           _notesController.text.trim().isEmpty ? null : _notesController.text.trim(),
         );
-        return true; // Retorna true para o BaseFormDialog fechar automaticamente
+        return true;
       },
       builder: (formKey) {
         return Form(
