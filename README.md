@@ -103,40 +103,43 @@ O HelpACS está servindo como base prática para meu **Trabalho de Conclusão de
 
 ## 📸 Demonstração
 
-### Tela inicial
+Tela inicial
 
-![Tela inicial](docs/screenshots/Home_Page.png)
+<p align="center"> <img src="docs/screenshots/Home_Page.png" alt="Tela inicial" width="220"> </p>
 
-### Vacinação
+Vacinação
 
-![Módulo de vacinação](docs/screenshots/Vacinação.png)
+<p align="center"> <img src="docs/screenshots/Vacinação.png" alt="Módulo de vacinação" width="220"> <img src="docs/screenshots/Cadastro_paciente.png" alt="Cadastro de paciente" width="220"> <img src="docs/screenshots/Campanhas.png" alt="Campanhas" width="220"> </p>
 
-### Saúde da Mulher
+<p align="center"> <img src="docs/screenshots/Cronograma_vacinal.png" alt="Cronograma vacinal" width="220"> <img src="docs/screenshots/Cronograma_aplicadas.png" alt="Vacinas aplicadas" width="220"> <img src="docs/screenshots/Upload_midia.png" alt="Upload de mídia" width="220"> </p>
 
-![Módulo Saúde da Mulher](docs/screenshots/Saúde_mulher.png)
+Saúde da Mulher
 
-### Pré-Natal
+<p align="center"> <img src="docs/screenshots/Saúde_mulher.png" alt="Saúde da Mulher" width="220"> <img src="docs/screenshots/Acompanhamento.png" alt="Acompanhamento" width="220"> <img src="docs/screenshots/Cadastro_mulher.png" alt="Cadastro da mulher" width="220"> </p>
 
-![Módulo de gestantes](docs/screenshots/Pré_Natal.png)
+Pré-Natal
 
-### Notes
+<p align="center"> <img src="docs/screenshots/Pré_Natal.png" alt="Pré-Natal" width="220"> <img src="docs/screenshots/Cadastro_gestantes.png" alt="Cadastro de gestantes" width="220"> <img src="docs/screenshots/Editar_gestantes.png" alt="Editar gestante" width="220"> </p>
 
-![Módulo de Notas](docs/screenshots/Notes.png)
+<p align="center"> <img src="docs/screenshots/Consultas_gestantes.png" alt="Consultas" width="220"> <img src="docs/screenshots/Ultrassons_gestantes.png" alt="Ultrassons" width="220"> <img src="docs/screenshots/Exames_gestantes.png" alt="Exames" width="220"> </p>
 
-### Calendar
+<p align="center"> <img src="docs/screenshots/Vacinas_gestantes.png" alt="Vacinas" width="220"> <img src="docs/screenshots/Galeria_gestantes.png" alt="Galeria" width="220"> </p>
 
-![Módulo de Calendário](docs/screenshots/Calendar.png)
+Notes
 
-### Consumo Alimentar
+<p align="center"> <img src="docs/screenshots/Notes.png" alt="Módulo Notas" width="220"> </p>
 
-![Módulo Consumo Alimentar](docs/screenshots/Consumo_Alimentar.png)
-![Módulo Consumo Alimentar](docs/screenshots/Historico_Alimentar.png)
-![Módulo Consumo Alimentar](docs/screenshots/Relatorio_Geral_Nutri.png)
+Calendar
 
-### Profile
+<p align="center"> <img src="docs/screenshots/Calendar.png" alt="Módulo Calendário" width="220"> </p>
 
-![Profile](docs/screenshots/Profile.png)
+Consumo Alimentar
 
+<p align="center"> <img src="docs/screenshots/Consumo_Alimentar.png" alt="Consumo Alimentar" width="220"> <img src="docs/screenshots/Historico_Alimentar.png" alt="Histórico Alimentar" width="220"> <img src="docs/screenshots/Relatorio_Geral_Nutri.png" alt="Relatório Geral de Nutrição" width="220"> </p>
+
+Profile
+
+<p align="center"> <img src="docs/screenshots/Profile.png" alt="Perfil" width="220"> </p>
 
 ## ▶️ Como Executar o Projeto
 

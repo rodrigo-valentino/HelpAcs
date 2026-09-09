@@ -83,7 +83,7 @@ class _ChildListPageState extends ConsumerState<ChildListPage> {
       appBar: AppBar(
         title: _selectionController.isSelectionMode
             ? Text('${_selectionController.count} selecionado(s)')
-            : const Text('Pacientes Infantis'),
+            : const Text('Pacientes'),
         leading: _selectionController.isSelectionMode
             ? IconButton(
                 icon: const Icon(Icons.close),
