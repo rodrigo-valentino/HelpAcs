@@ -10,7 +10,12 @@ Aplicativo móvel multiplataforma **offline-first** desenvolvido em Flutter, Riv
 O aplicativo busca reunir as informações dos pacientes em um único lugar, facilitando a consulta durante as visitas domiciliares e calculando automaticamente quais acompanhamentos estão em dia, precisam de atenção ou estão atrasados.
 
 ---
-
+   ## 📑 Índice
+   - [Contexto e Motivação](#-contexto-e-motivação)
+   - [Funcionalidades](#-principais-funcionalidades)
+   - [Arquitetura](#-arquitetura-e-organização-de-código)
+   - [Como Executar](#️-como-executar-o-projeto)
+---     
 ## 🎯 Contexto e Motivação
 
 A ideia do HelpACS surgiu a partir de uma situação muito comum na rotina do ACS: ter que acompanhar várias informações ao mesmo tempo, como vacinação, pré-natal, saúde da mulher e acompanhamento infantil. 
@@ -45,7 +50,7 @@ Uma das decisões arquiteturais mais importantes do projeto foi **fazer o aplica
 
 * **Flutter / Dart:** Framework utilizado para a interface e lógica de negócio.
 * **Hive (NoSQL):** Banco de dados local utilizado para armazenar os dados diretamente no dispositivo, sem depender de uma API ou servidor remoto.
-* **Riverpod:** Gerenciamento de estado reativo. Quando os dados mudam no banco, a interface se atualiza automaticamente.
+* **Riverpod:** Gerenciamento de estado reativo. Após cada operação de escrita, o Controller responsável relê os dados da box e atualiza o estado, propagando a mudança para a interface automaticamente.
 * **Bibliotecas Auxiliares:** `csv` e `excel` (processamento de planilhas locais) e `syncfusion_flutter_calendar` (mural interativo).
 
 ---
@@ -63,11 +68,11 @@ flowchart TD
     DB[("Banco de Dados<br/>(Hive Local)")]
 
     UI -->|"Informa ações"| STATE
-    STATE -->|"Valida regras"| SERVICE
-    SERVICE -->|"Atualiza"| MODEL
-    STATE -->|"Operações CRUD"| MODEL
-    MODEL -->|"Persistência binária"| DB
-    DB -->|"Notifica UI via State"| STATE
+    STATE -->|"Consulta cálculos e regras"| SERVICE
+    STATE -->|"Grava / atualiza"| MODEL
+    MODEL -->|"Persiste"| DB
+    MODEL -->|"Retorna dados salvos"| STATE
+    STATE -->|"Releitura manual pós-escrita<br/>atualiza state e notifica"| UI
 
 ```
 
@@ -106,15 +111,21 @@ Tela inicial
 
 <p align="center"> <img src="docs/screenshots/Home_Page.png" alt="Tela inicial" width="220"> </p>
 
+##
+
 Vacinação
 
 <p align="center"> <img src="docs/screenshots/Vacinação.png" alt="Módulo de vacinação" width="220"> <img src="docs/screenshots/Cadastro_paciente.png" alt="Cadastro de paciente" width="220"> <img src="docs/screenshots/Campanhas.png" alt="Campanhas" width="220"> </p>
 
 <p align="center"> <img src="docs/screenshots/Cronograma_vacinal.png" alt="Cronograma vacinal" width="220"> <img src="docs/screenshots/Cronograma_aplicadas.png" alt="Vacinas aplicadas" width="220"> <img src="docs/screenshots/Upload_midia.png" alt="Upload de mídia" width="220"> </p>
 
+##
+
 Saúde da Mulher
 
 <p align="center"> <img src="docs/screenshots/Saúde_mulher.png" alt="Saúde da Mulher" width="220"> <img src="docs/screenshots/Acompanhamento.png" alt="Acompanhamento" width="220"> <img src="docs/screenshots/Cadastro_mulher.png" alt="Cadastro da mulher" width="220"> </p>
+
+##
 
 Pré-Natal
 
@@ -124,17 +135,25 @@ Pré-Natal
 
 <p align="center"> <img src="docs/screenshots/Vacinas_gestantes.png" alt="Vacinas" width="220"> <img src="docs/screenshots/Galeria_gestantes.png" alt="Galeria" width="220"> </p>
 
+##
+
 Notes
 
 <p align="center"> <img src="docs/screenshots/Notes.png" alt="Módulo Notas" width="220"> </p>
+
+##
 
 Calendar
 
 <p align="center"> <img src="docs/screenshots/Calendar.png" alt="Módulo Calendário" width="220"> </p>
 
+##
+
 Consumo Alimentar
 
 <p align="center"> <img src="docs/screenshots/Consumo_Alimentar.png" alt="Consumo Alimentar" width="220"> <img src="docs/screenshots/Historico_Alimentar.png" alt="Histórico Alimentar" width="220"> <img src="docs/screenshots/Relatorio_Geral_Nutri.png" alt="Relatório Geral de Nutrição" width="220"> </p>
+
+##
 
 Profile
 
@@ -142,41 +161,56 @@ Profile
 
 ## ▶️ Como Executar o Projeto
 
-**Pré-requisitos:** Flutter SDK, Dart e um Emulador Android/iOS ou dispositivo físico configurado.
+**Pré-requisitos:**
+- [Flutter SDK](https://docs.flutter.dev/get-started/install) instalado e configurado (`flutter doctor` sem erros).
+- Dart (já incluso na instalação do Flutter).
+- Um emulador Android/iOS ou dispositivo físico com depuração USB habilitada.
 
-1. Clone o repositório:
+**1. Clone o repositório:**
 
 ```bash
-git clone <URL_DO_REPOSITORIO>
-cd <NOME_DO_PROJETO>
-
+git clone https://github.com/SEU_USUARIO/helpacs.git
+cd helpacs
 ```
 
-2. Instale as dependências:
+> Substitua `SEU_USUARIO/helpacs` pelo caminho real do seu repositório.
+
+**2. Instale as dependências:**
 
 ```bash
 flutter pub get
-
 ```
 
-3. **Geração de código do Hive (Obrigatório):**
+**3. Gere o código do Hive (obrigatório):**
+
+O projeto usa `hive_generator` + `build_runner` para gerar os adapters (`*.g.dart`) a partir dos modelos anotados com `@HiveType`. Sem esse passo, o app não compila.
 
 ```bash
 dart run build_runner build --delete-conflicting-outputs
-
 ```
 
-4. Execute a aplicação:
+**4. Verifique os assets:**
+
+Confirme que a pasta `assets/images/` está presente com o arquivo `logo_foreground.png` (usado na splash screen e no ícone do app). Caso esteja ausente, o build falhará ao tentar carregar a imagem declarada no `pubspec.yaml`.
+
+**5. Execute a aplicação:**
 
 ```bash
 flutter run
-
 ```
+
+> Caso queira gerar um APK de release para testes em dispositivo físico:
+> ```bash
+> flutter build apk --release
+> ```
+> O arquivo gerado ficará em `build/app/outputs/flutter-apk/app-release.apk`.
 
 ---
 
-**👨‍💻 Desenvolvido por:** Rodrigo Valentino
+## 👨‍💻 Desenvolvido por: Rodrigo Valentino
 
 *Projeto concebido com foco em aprendizado e portfólio técnico em Sistemas de Informação.*
 
-> 📌 **Observação:** O HelpACS é um projeto acadêmico e em desenvolvimento contínuo. Não deve ser considerado, em sua versão atual, um substituto dos sistemas institucionais do SUS. O uso de dados reais de pacientes em campo requer adequação completa às normas de segurança e à LGPD.
+> 📌 **Observação:** O HelpACS é um projeto acadêmico e em desenvolvimento contínuo.
+Não deve ser considerado, em sua versão atual, um substituto dos sistemas institucionais do SUS.
+O uso de dados reais de pacientes em campo requer adequação completa às normas de segurança e à LGPD.
