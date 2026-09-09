@@ -1,4 +1,3 @@
-```markdown
 # 🩺 HelpACS — Sistema de Apoio ao Agente Comunitário de Saúde
 
 ![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
@@ -181,5 +180,3 @@ flutter run
 *Projeto concebido com foco em aprendizado e portfólio técnico em Sistemas de Informação.*
 
 > 📌 **Observação:** O HelpACS é um projeto acadêmico e em desenvolvimento contínuo. Não deve ser considerado, em sua versão atual, um substituto dos sistemas institucionais do SUS. O uso de dados reais de pacientes em campo requer adequação completa às normas de segurança e à LGPD.
-
-```
